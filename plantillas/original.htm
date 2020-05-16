@@ -1,0 +1,79 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="es" lang="es">
+ <head>
+  <title>{%titulo}</title>
+  <meta http-equiv="content-type" content="application/xhtml+xml; charset={%codificacion}" />
+  <meta name="author" content="{%autor}" />
+  <meta name="generator" content="{%generador}" />
+  <meta name="description" content="{%descripcion}" />
+  <link REL="shortcut icon" href="favicon.ico">
+  <link rel="stylesheet" type="text/css" href="{%cssGeneral}" media="screen, tv, projection" title="Global" />
+  <!--[if lte IE 6]>
+  <link rel="stylesheet" type="text/css" href="{%cssExplorer6}" media="screen, tv, projection" title="Global" />
+  <![endif]-->
+  <!--[if IE 7]>
+  <link rel="stylesheet" type="text/css" href="{%cssExplorer7}" media="screen, tv, projection" title="Global" />
+  <![endif]-->
+{%javascript}
+ </head>
+ <body>
+
+  <!-- Inicio cabecera -->
+  <div id="cabecera">
+   <div id="logoAplicacion">{%logoAplicacion}</div>
+   <div id="logoCliente">{%logoCliente}</div>
+  <!-- Inicio recuadro de espera -->
+  <div id="cuadroEspera"></div>
+  <!-- Final recuadro de espera -->
+  </div>
+  <!-- Final cabecera -->
+
+  <!-- Inicio barra de menú -->
+  <div id="barraMenu">{%menu}</div>
+  <!-- Final barra de menú -->
+
+  <!-- Inicio bloque izquierdo -->
+  <div id="bloqueIzquierdo">
+   <div id="componente">
+    <div id="buscador">{%buscador}</div>
+    <div id="tituloComponente">{%componente}</div>
+   </div>
+   <!-- Inicio bloque de contenido principal -->
+   <div id="contenidoPrincipal">
+   {%bloqueIzquierdo}
+   </div>
+   <!-- Final bloque de contenido principal -->
+   <!-- Inicio barra de botones y paginador de resultados -->
+   <div id="botonera">
+    <div id="paginador">{%paginador}</div>
+    <div id="botones">{%botones}</div>
+   </div>
+   <!-- Final barra de botones y paginador de resultados -->
+   <!-- Inicio barra de estado -->
+   <div id="barraEstado">
+    <div id="registros">{%registros}</div>
+    <div id="mensajeBarraEstado"></div>
+   </div>
+   <!-- Final barra de estado -->
+  </div>
+  <!-- Final bloque izquierdo -->
+
+  <!-- Inicio bloque derecho -->
+  <div id="bloqueDerecho">
+  {%bloqueDerecho}
+  </div>
+  <!-- Final bloque derecho -->
+
+  <!-- Inicio pie -->
+  <div id="pie">{%pie}</div>
+  <!-- Final pie -->
+
+  <!-- Inicio de ventana emergente -->
+  <div id="cuadroDialogo"></div>
+  <!-- Final de ventana emergente -->
+
+
+ </body>
+</html>

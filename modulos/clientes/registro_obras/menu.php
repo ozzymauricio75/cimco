@@ -1,0 +1,117 @@
+<?php
+
+/**
+*
+* Copyright (C) 2009 FELINUX Ltda
+* Francisco J. Lozano B. <fjlozano@felinux.com.co>
+* Mauricio Oidor L. <ozzymauricio75@gmail.com>
+* 
+* Este archivo es parte de:
+* PANCE :: Plataforma para la Administración del Nexo Cliente-Empresa
+*
+* Este programa es software libre: usted puede redistribuirlo y/o
+* modificarlo  bajo los términos de la Licencia Pública General GNU
+* publicada por la Fundación para el Software Libre, ya sea la versión 3
+* de la Licencia, o (a su elección) cualquier versión posterior.
+*
+* Este programa se distribuye con la esperanza de que sea útil, pero
+* SIN GARANTÍA ALGUNA; ni siquiera la garantía implícita MERCANTIL o
+* de APTITUD PARA UN PROPÓSITO DETERMINADO. Consulte los detalles de
+* la Licencia Pública General GNU para obtener una información más
+* detallada.
+*
+* Debería haber recibido una copia de la Licencia Pública General GNU
+* junto a este programa. En caso contrario, consulte:
+* <http://www.gnu.org/licenses/>.
+*
+**/
+$idSucursales = array();
+
+/*** Obtener lista de sucursales a las cuales tiene acceso el usuario actual ***/
+$tablas     = array(
+    "a" => "perfiles_usuario",
+    "b" => "componentes_usuario",
+    "c" => "sucursales"
+);
+
+$columnas = array(
+    "id"     => "a.id_sucursal",
+    "nombre" => "c.nombre"
+);
+
+$condicion = "c.id = a.id_sucursal AND a.id = b.id_perfil
+              AND a.id_usuario = '$sesion_id_usuario' AND b.id_componente = '".$componente->id."'";
+
+$consulta  = SQL::seleccionar($tablas, $columnas, $condicion);
+if (SQL::filasDevueltas($consulta)) {
+    $sucursales = array();
+    while ($datos = SQL::filaEnObjeto($consulta)) {
+        $sucursales[]    = $datos->id;
+	    $idSucursales[]  = $datos->id;
+    }
+    $sucursales = "id_sucursal IN (".implode(",", $sucursales).")";
+} else {
+    $sucursales = "id_sucursal IS NULL";
+}
+
+$agrupamiento = '';
+$ordenamiento = '';
+
+/*** Nombre de la vista a partir de la cual se genera la tabla ***/
+$vistaMenu     = "menu_registro_obras";
+$vistaBuscador = "buscador_registro_obras";
+$alineacion    = array("C","C","I","I","I","I","I","I","I");
+
+/*** Devolver datos para autocompletar la busqueda ***/
+if (isset($url_completar)) {
+    echo SQL::datosAutoCompletar($vistaMenu, $url_q);
+    exit;
+}
+
+/*** Generar botones de comandos ***/
+$botones .= HTML::boton("ADICREOB",$textos["ADICIONAR"],"ejecutarComando(this, 600,550);","adicionar");
+$botones .= HTML::boton("CONSREOB",$textos["CONSULTAR"],"ejecutarComando(this, 850,550);","consultar");
+
+/*** Obtener el número de la página actual ***/
+if (empty($url_pagina)) {
+    $paginaActual = 1;
+} else {
+    $paginaActual = intval($url_pagina);
+}
+
+/*** Datos por defecto para realizar la consulta ***/
+$condicion      = SQL::evaluarBusqueda($vistaBuscador, $vistaMenu);
+$agrupamiento   = "";
+$ordenamiento   = SQL::ordenColumnas("FECHA_INGRESO DESC, NUMERO_COTIZACION DESC");
+$numeroFilas    = SQL::$filasPorConsulta;
+$columnas       = SQL::obtenerColumnas($vistaMenu);
+$totalRegistros = SQL::filasDevueltas(SQL::seleccionar(array($vistaMenu), $columnas, $condicion." AND ".$sucursales, $agrupamiento, $ordenamiento));
+$paginador      = HTML::insertarPaginador($totalRegistros, $paginaActual, $numeroFilas);
+$registros      = HTML::imprimirRegistros($totalRegistros, $paginaActual, $numeroFilas);
+
+/*** Ejecutar la consulta y generar tabla a partir de los resultados ***/
+$consulta     = SQL::seleccionar(array($vistaMenu), $columnas, $condicion." AND ".$sucursales, $agrupamiento, $ordenamiento, $paginaActual, $numeroFilas);
+$tabla        = HTML::generarTabla($columnas, $consulta, $alineacion);
+
+/*** Generar y enviar plantilla completa si la petición no se realiza vía AJAX ***/
+if (empty($url_origen) || ($url_origen != "ajax")) {
+    Plantilla::iniciar();
+    Plantilla::sustituir("menu", $sesion_menu);
+    Plantilla::sustituir("buscador", HTML::insertarBuscador());
+    Plantilla::sustituir("botones", $botones);
+    Plantilla::sustituir("paginador", $paginador);
+    Plantilla::sustituir("registros", $registros);
+    Plantilla::sustituir("mensaje");
+    Plantilla::sustituir("bloqueDerecho");
+    Plantilla::sustituir("bloqueIzquierdo", $tabla);
+    Plantilla::sustituir("cuadroDialogo");
+    Plantilla::enviarCodigo();
+} else {
+    /*** Devolver sólo datos en formato JSON para las consultas vía AJAX ***/
+    $datos[0] = $tabla;
+    $datos[1] = $paginador;
+    $datos[2] = $registros;
+    $datos[3] = $botones;
+    HTTP::enviarJSON($datos);
+}
+?>

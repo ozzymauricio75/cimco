@@ -1,0 +1,16 @@
+ALTER TABLE `pance_registro_obras` 
+ADD `valor_mano_obra_consorciado` DECIMAL(12,2) NULL DEFAULT '0' COMMENT 'Valor mano de obra consorciado', 
+ADD `valor_materiales_consorciado` DECIMAL(12,2) NULL DEFAULT '0' COMMENT 'Valor de los materiales consorciado', 
+ADD `costo_directo_consorciado` DECIMAL(12,2) NULL DEFAULT '0' COMMENT 'Valor del costo directo del requerimiento para el consorciado', 
+ADD `valor_administracion_consorciado` DECIMAL(12,2) NULL DEFAULT '0' COMMENT 'Valor por administracion cotizado consorciado', 
+ADD `valor_imprevistos_consorciado` DECIMAL(12,2) NULL DEFAULT '0' COMMENT 'Valor de los imprevistos cotizados consorciado', 
+ADD `valor_utilidad_consorciado` DECIMAL(12,2) NULL DEFAULT '0' COMMENT 'Valor de la utilidad cotizado consorciado', 
+ADD `valor_iva_consorciado` DECIMAL(12,2) NULL DEFAULT '0' COMMENT 'Valor del impuesto sobre la utilidad consorciado',
+ADD `valor_mano_obra_administracion` DECIMAL(12,2) NULL DEFAULT '0' COMMENT 'Valor mano de obra administracion',
+ADD `valor_materiales_administracion` DECIMAL(12,2) NULL DEFAULT '0' COMMENT 'Valor de los materiales administracion', 
+ADD `costo_directo_administracion` DECIMAL(12,2) NULL DEFAULT '0' COMMENT 'Valor del costo directo del requerimiento para el administracion', 
+ADD `valor_administracion_administracion` DECIMAL(12,2) NULL DEFAULT '0' COMMENT 'Valor por administracion cotizado administracion', 
+ADD `valor_imprevistos_administracion` DECIMAL(12,2) NULL DEFAULT '0' COMMENT 'Valor de los imprevistos cotizados administracion', 
+ADD `valor_utilidad_administracion` DECIMAL(12,2) NULL DEFAULT '0' COMMENT 'Valor de la utilidad cotizado administracion', 
+ADD `valor_iva_administracion` DECIMAL(12,2) NULL DEFAULT '0' COMMENT 'Valor del impuesto sobre la utilidad administracion';
+ 

@@ -1,0 +1,16 @@
+alter table pance_localidades add constraint localidad_municipio foreign key (id_municipio) references pance_municipios(id) on update cascade on delete restrict;
+alter table pance_sedes_clientes add constraint sedes_terceros foreign key (id_cliente) references pance_terceros(id) on update cascade on delete restrict;
+alter table pance_sedes_clientes add constraint sedes_sucursal foreign key (id_sucursal) references pance_sucursales(id) on update cascade on delete restrict;
+alter table pance_sedes_clientes add constraint sedes_municipios foreign key (id_municipios) references pance_municipios(id) on update cascade on delete restrict;
+ALTER TABLE `pance_cotizaciones` CHANGE `estado` `estado` ENUM( '1', '2', '3', '4', '5' ) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT '1' COMMENT 'Estado de la cotizacion: 1=Pendiente, 2=Aprobada, 3=Anulada, 4=Recotizar, 5=Remplazada';
+ALTER TABLE `pance_requerimientos_clientes` ADD `estado_cotizacion` ENUM( '1', '2', '3', '4', '5', '6' ) NOT NULL DEFAULT '6' COMMENT 'Estado de la cotizacion: 1=Pendiente, 2=Aprobada, 3=Anulada, 4=Recotizar, 5=Remplazada, 6=No notificada' AFTER `notificado` ;
+DELETE FROM `pance_componentes_usuario` WHERE CONVERT( `pance_componentes_usuario`.`id_componente` USING utf8 ) = 'ADICAPCO' LIMIT 1;
+DELETE FROM `pance_componentes_usuario` WHERE CONVERT( `pance_componentes_usuario`.`id_componente` USING utf8 ) = 'CONSAPCO' LIMIT 1;
+DELETE FROM `pance_componentes_usuario` WHERE CONVERT( `pance_componentes_usuario`.`id_componente` USING utf8 ) = 'ELIMAPCO' LIMIT 1;
+DELETE FROM `pance_componentes_usuario` WHERE CONVERT( `pance_componentes_usuario`.`id_componente` USING utf8 ) = 'MODIAPCO' LIMIT 1;
+DELETE FROM `pance_componentes_usuario` WHERE CONVERT( `pance_componentes_usuario`.`id_componente` USING utf8 ) = 'GESTAPCO' LIMIT 1;
+DELETE FROM `pance_componentes` WHERE CONVERT(`pance_componentes`.`id` USING utf8) = 'ADICAPCO' LIMIT 1;
+DELETE FROM `pance_componentes` WHERE CONVERT(`pance_componentes`.`id` USING utf8) = 'CONSAPCO' LIMIT 1;
+DELETE FROM `pance_componentes` WHERE CONVERT(`pance_componentes`.`id` USING utf8) = 'MODIAPCO' LIMIT 1;
+DELETE FROM `pance_componentes` WHERE CONVERT(`pance_componentes`.`id` USING utf8) = 'ELIMAPCO' LIMIT 1;
+DELETE FROM `pance_componentes` WHERE CONVERT(`pance_componentes`.`id` USING utf8) = 'GESTAPCO' LIMIT 1;

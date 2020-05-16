@@ -1,0 +1,10 @@
+consorciado;numero requerimiento;fecha requerimiento;descripcion;tipo solicitud;sede;ubicacion;numero cotizacion consorcio;fecha cotizacion consorcio;numero cotizacion consorciado;fecha cotizacion consorciado;estado cotizacion;valor mano de obra;valor materiales;costo directo;administracion;imprevistos;utilidad;impuesto;total;valor facturado;valor pagado;numero factura;tipo acta;fecha acta;detalle acta;pago consorciado;numero factura consorciado;valor mano obra consorciado;valor materiales consorciado;costo directo consorciado;administracion consorciado;imprevistos consorciado;utilidad consorciado;impuesto consorciado;total consorciado;valor mano obra administracion;valor materiales administracion;costo directo administracion;administracion administracion;imprevistos administracion;utilidad administracion;impuesto administracion;total administracion
+INCOEL LTDA;00000520;2009-08-27;"Iluminación fachada costado oriental del deposito
+";Servicio por demanda;TECHO;Bogotá;00000329-00;2009-11-11;OM09-421;2009-11-11;Ejecutada;368000;698200;1066200;0;0;0;170592;1236792;0;0;;;;;;;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0
+INCOEL LTDA;00000521;2009-05-26;"Iluminación via Bahía Ventas Replanteo 1
+";Proyecto;TECHO;Bogotá;00000313-00;2009-11-11;OM09-417;;Descartada;13441000;82746075;96187075;0;0;0;15389932;111577007;0;0;;;;;;;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0
+INCOEL LTDA;00000522;2009-05-26;"Iluminación via Bahía Ventas Replanteo 2
+";Proyecto;TECHO;Bogotá;00000314-00;2009-11-11;OM09-416;2009-11-11;Ejecutada;3570000;21671950;25241950;0;0;0;4038712;29280662;0;0;;;;;;;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0
+INCOEL LTDA;00000184;2009-06-03;"Instalaciones Electricas y Adecuaciones Autosur";Proyecto;BOGOTA - CD SUROCC AUTOSUR;Bogotá;00000183-01;2009-11-11;OM09-378 ;2009-11-11;En ejecución;7822000;13996035;21818035;0;0;0;3490885;25308920;0;0;;;;;;;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0
+ANDINA S.A.;00000479;2009-10-19;"Adecuación para la instalación de cable UTP CD
+";Servicio por demanda;CERVECERIA BUCARAMANGA;Bucaramanga;00000477-00;2009-11-11;CT-CIM-09-119 ;;Pendiente;112000;181000;293000;0;0;0;46880;339880;0;0;;;;;;;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0
