@@ -65,6 +65,8 @@ $registros["tasas"] = array(
     array(
         "id"                  => "0",
         "descripcion"         => "Prueba",
+        "porcentaje"          => 0,
+        "valor_base"          => 0,
         "id_usuario_registra" => 0,
         "fecha_registra"      => "0000-00-00 00:00:00",
         "fecha_modificacion"  => "0000-00-00 00:00:00"
@@ -129,7 +131,7 @@ $registros["componentes"] = array(
     )
 );
 
-$vistas = array(
+/*$vistas = array(
     array(
         "CREATE OR REPLACE ALGORITHM = MERGE VIEW pance_menu_tasas AS
         SELECT
@@ -153,6 +155,6 @@ $vistas = array(
         WHERE
             id > 0;"
     )
-);
+);*/
 
 ?>

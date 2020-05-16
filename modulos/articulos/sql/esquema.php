@@ -6,27 +6,27 @@
 * Raul Mauricio Oidor Lozano. <ozzymauricio75@gmail.com>
 *
 * Este archivo es parte de:
-* PANCE :: Plataforma para la Administraci髇 del Nexo Cliente-Empresa
+* PANCE :: Plataforma para la Administraci贸n del Nexo Cliente-Empresa
 *
 * Este programa es software libre: usted puede redistribuirlo y/o
-* modificarlo  bajo los t閞minos de la Licencia P鷅lica General GNU
-* publicada por la Fundaci髇 para el Software Libre, ya sea la versi髇 3
-* de la Licencia, o (a su elecci髇) cualquier versi髇 posterior.
+* modificarlo  bajo los t茅rminos de la Licencia P煤blica General GNU
+* publicada por la Fundaci贸n para el Software Libre, ya sea la versi贸n 3
+* de la Licencia, o (a su elecci贸n) cualquier versi贸n posterior.
 *
-* Este programa se distribuye con la esperanza de que sea 鷗il, pero
-* SIN GARANT虯 ALGUNA; ni siquiera la garant韆 impl韈ita MERCANTIL o
-* de APTITUD PARA UN PROP覵ITO DETERMINADO. Consulte los detalles de
-* la Licencia P鷅lica General GNU para obtener una informaci髇 m醩
+* Este programa se distribuye con la esperanza de que sea 煤til, pero
+* SIN GARANT脥A ALGUNA; ni siquiera la garant铆a impl铆cita MERCANTIL o
+* de APTITUD PARA UN PROP脫SITO DETERMINADO. Consulte los detalles de
+* la Licencia P煤blica General GNU para obtener una informaci贸n m谩s
 * detallada.
 *
-* Deber韆 haber recibido una copia de la Licencia P鷅lica General GNU
+* Deber铆a haber recibido una copia de la Licencia P煤blica General GNU
 * junto a este programa. En caso contrario, consulte:
 * <http://www.gnu.org/licenses/>.
 *
 **/
 
-$borrarSiempre = array();
-// Definici髇 de tablas
+//$borrarSiempre = array();
+// Definici贸n de tablas
 $borrarSiempre["articulos"] = false;
 $tablas["articulos"] = array(
     "id"                      => "INT(9) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT COMMENT 'Llave primaria'",
@@ -40,12 +40,12 @@ $tablas["articulos"] = array(
     "id_tasa"                 => "INT(7) UNSIGNED ZEROFILL NOT NULL COMMENT 'Id de la tabla tasas'",
     "id_usuario_registra"     => "SMALLINT(4) UNSIGNED ZEROFILL NOT NULL DEFAULT '0' COMMENT 'Id del usuario que genera el registro'",
     "fecha_registra"          => "DATETIME NOT NULL COMMENT 'Fecha ingreso al sistema'",
-    "fecha_modificacion"      => "TIMESTAMP NOT NULL COMMENT 'Fecha ultima modificaci髇'",
+    "fecha_modificacion"      => "TIMESTAMP  NOT NULL COMMENT 'Fecha ultima modificaci贸n'",
 );
-// Definici髇 de llaves primarias
+// Definici贸n de llaves primarias
 $llavesPrimarias["articulos"] = "id";
 
-// Definici髇 de campos 鷑icos
+// Definici贸n de campos 煤nicos
 $llavesUnicas["articulos"] = array(
     "codigo,referencia"
 );
@@ -57,7 +57,7 @@ $indicesTabla["articulos"] = array(
     )
 );
 
-//Definici髇 de llave foraneas
+//Definici贸n de llave foraneas
 $llavesForaneas["articulos"] = array(
     array(
         // Nombre de la llave
@@ -91,7 +91,7 @@ $llavesForaneas["articulos"] = array(
     )
 );
 
-// Inserci髇 de datos iniciales***/
+// Inserci贸n de datos iniciales***/
 $registros["articulos"] = array(
     array(
         "id"                  => "0",
@@ -104,12 +104,12 @@ $registros["articulos"] = array(
         "precio"              => 0,
         "id_tasa"             => "0",
         "id_usuario_registra" => "0",
-        "fecha_registra"      => "0000-00-00 00:00:00",
-        "fecha_modificacion"  => "0000-00-00 00:00:00"
+        "fecha_registra"      => "",
+        "fecha_modificacion"  => ""
     )
 );
 
-// Inserci髇 de datos iniciales***/
+// Inserci贸n de datos iniciales***/
 $registros["componentes"] = array(
     array(
         "id"              => "GESTARTI",
