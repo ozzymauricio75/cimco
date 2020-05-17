@@ -29,6 +29,7 @@ $textos = array(
   /*** Extensiones ***/
     "GESTPREF"      => "Preferencias",
    	"GESTAGEN"	    => "Agenda",
+    "GESTINVE"      => "Articulos",
 	"GESTNOTA"      => "Notas",
 	"FECHA"		    => "Fecha",
 	"NOTAS" 	    => "Notas",
@@ -41,10 +42,10 @@ $textos = array(
 
 	/***Principal***/
     "MENUINSE"                  => "Iniciar sesión",
-    "MENUINVE"                  => "Inventario",
     "MENUPROV"                  => "Proveedores",
     "MENUPROD"                  => "Producción",
     "MENUCLIE"                  => "Clientes",
+    "MENUINVE"                  => "Inventarios",
     "MENUMERC"                  => "Mercadeo",
     "MENUFINA"                  => "Financiera",
     "MENULOGI"                  => "Logística",
@@ -53,7 +54,9 @@ $textos = array(
     "MENUADMI"                  => "Administración",
     "MENUFINS"                  => "Finalizar sesión",
     "MENUPRIN"                  => "Inicio",
+    "GESTINVE"                  => "Articulos",
     "SUBMESTC"                  => "Estructura corporativa",
+    "SUBMARTI"                  => "Articulos",
     "SUBMACCE"                  => "Acceso",
     "SUBMDISP"                  => "Dispositivos",
     "SUBMSEGU"                  => "Seguridad",

@@ -2,7 +2,7 @@
 /**
 *
 * Copyright (C) 2020 Raul Mauricio Oidor Lozano
-* Raul Mauricio Oidor Lozano <ozzymauricio75@gmail.com>
+* Walter Andres Marquez Gutierrez <walteramg@hotmail.com>
 *
 * Este archivo es parte de:
 * SEM :: Software empresarial a la medida

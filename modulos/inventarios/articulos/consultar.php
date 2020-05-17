@@ -43,31 +43,7 @@ if (!empty($url_generar)) {
         $error         = "";
         $titulo        = $componente->nombre;
         $id_sucursal      = SQL::obtenerValor("sucursales","nombre","id='$datos->id_sucursal'");
-        $estructura_grupo = SQL::obtenerValor("estructura_grupos","descripcion","id='$datos->id_estructura_grupo'");
-        $id_categoria     = SQL::obtenerValor("estructura_grupos","id_categoria","id='$datos->id_estructura_grupo'");
-        $categoria        = SQL::obtenerValor("grupo1","descripcion","id='$id_categoria'");
-        $id_grupo1        = SQL::obtenerValor("estructura_grupos","id_grupo1","id='$datos->id_estructura_grupo'");
-        $grupo1           = SQL::obtenerValor("grupo1","descripcion","id='$id_grupo1'");
-        $id_grupo2        = SQL::obtenerValor("estructura_grupos","id_grupo2","id='$datos->id_estructura_grupo'");
-        $grupo2           = SQL::obtenerValor("grupo2","descripcion","id='$id_grupo2'");
-        $id_grupo3        = SQL::obtenerValor("estructura_grupos","id_grupo3","id='$datos->id_estructura_grupo'");
-        $grupo3           = SQL::obtenerValor("grupo3","descripcion","id='$id_grupo3'");
-        $id_grupo4        = SQL::obtenerValor("estructura_grupos","id_grupo4","id='$datos->id_estructura_grupo'");
-        $grupo4           = SQL::obtenerValor("grupo4","descripcion","id='$id_grupo4'");
-        $id_grupo5        = SQL::obtenerValor("estructura_grupos","id_grupo5","id='$datos->id_estructura_grupo'");
-        $grupo5           = SQL::obtenerValor("grupo5","descripcion","id='$id_grupo5'");
-        $id_grupo6        = SQL::obtenerValor("estructura_grupos","id_grupo6","id='$datos->id_estructura_grupo'");
-        $grupo6           = SQL::obtenerValor("grupo6","descripcion","id='$id_grupo6'");
-
-        $marca = SQL::obtenerValor("marcas","descripcion","id='$datos->id_marca'");
-        $precio_unidad_minimo = SQL::obtenerValor("precio_unidad_minimo","descripcion","id='$datos->id_precio_unidad_minimo'");
-        $unidad_compra = SQL::obtenerValor("unidades","descripcion","id='$datos->id_unidad_compra'");
-        $unidad_presentacion = SQL::obtenerValor("unidades","descripcion","id='$datos->id_unidad_presentacion'");
-        $unidad_venta_publico = SQL::obtenerValor("unidades","descripcion","id='$datos->id_unidad_venta_publico'");
-        $pais_procedencia = SQL::obtenerValor("paises","nombre","id='$datos->id_pais_procedencia'");
-        $criterio_subnivel_articulo = SQL::obtenerValor("criterio_subnivel_articulos","criterio","id='$datos->id_criterio_subnivel_articulo'");
-        $id_subnivel_articulo = SQL::obtenerValor("criterio_subnivel_articulos","id_subnivel_articulo","id='$datos->id_criterio_subnivel_articulo'");
-        $subnivel_articulo = SQL::obtenerValor("subnivel_articulos","subnivel","id='$id_subnivel_articulo'");
+        
         $id_tercero_comprador = SQL::obtenerValor("compradores","id_tercero","id='$datos->id_comprador'");
         $nombre_comprador = SQL::obtenerValor("menu_terceros","NOMBRE_COMPLETO","id='$id_tercero_comprador'");
         $tercero = SQL::obtenerValor("menu_terceros","NOMBRE_COMPLETO","id='$datos->id_tercero'");
@@ -77,97 +53,7 @@ if (!empty($url_generar)) {
             "2" => $textos["SUMINISTRO"],
             "3" => $textos["OBSEQUIO"],
         );
-        $tipo_agrupacion = array(
-            "0" => $textos["CODIGO_ORIGINAL"],
-            "1" => $textos["COMBO"],
-            "2" => $textos["KIT"]
-        );
-
-        if ($datos->tipo_agrupacion != "0"){
-            $tipo_agrupacion = array(
-                "1" => $textos["COMBO"],
-                "2" => $textos["KIT"]
-            );
-            $imprime_agrupacion = array(
-                "1" => $textos["DETALLE_ITEMS"],
-                "2" => $textos["MUESTRA_NOMBRE"]
-            );
-            $combo_kit = array(
-                HTML::agrupador(
-                    array(
-                        array(
-                            HTML::mostrarDato("tipo_agrupacion",$textos["TIPO_AGRUPACION"],$tipo_agrupacion[$datos->tipo_agrupacion]),
-                            HTML::mostrarDato("imprime_combos_kits",$textos["IMPRIME_AGRUPACION"],$imprime_agrupacion[$datos->imprime_combos_kits])
-                        )
-                    ),
-                    $textos["COMBO_KIT"]
-                )
-            );
-        } else {
-            $combo_kit = array(
-                HTML::campoOculto("tipo_agrupacion","")
-            );
-        }
-        $control_existencia = array(
-            "0" => $textos["POR_CODIGO"],
-            "1" => $textos["POR_SERIE"],
-            "2" => $textos["POR_LOTE"]
-        );
-        $nivel_precio_publico = array(
-            "0" => $textos["POPULAR"],
-            "1" => $textos["ECONOMICO"],
-            "2" => $textos["FINO"]
-        );
-        $foto_articulo_principal = array(
-            HTML::campoOculto("foto_articulo_principal","")
-        );
-        $ruta_foto = trim($datos->ruta_foto_principal);
-        $nombre_foto = trim($datos->nombre_archivo_foto_principal);
-        if ($ruta_foto!="" && $nombre_foto!=""){
-            $nombreArchivo = $ruta_foto."/".$nombre_foto;
-            if (file_exists($nombreArchivo)){
-                if (($archivo = fopen($nombreArchivo, "r")) !== FALSE){
-                    list($ancho, $alto, $tipo) = getimagesize($nombreArchivo);
-                    $altura_base = 300;
-                    $porcentaje_medidas =  $altura_base * 100 / $alto;
-                    $ancho_base = $ancho * $porcentaje_medidas / 100;
-                    $extension  = strtolower(substr($nombreArchivo, (strrpos($nombreArchivo, ".") - strlen($nombreArchivo)) + 1));
-
-                    $imagen_nueva = imagecreatetruecolor($ancho_base, $altura_base);
-                    if ($extension == "jpg"){
-                        $imagen = imagecreatefromjpeg($nombreArchivo);
-                    } else if ($extension == "png"){
-                        $imagen = imagecreatefrompng($nombreArchivo);
-                    } else if ($extension == "gif"){
-                        $imagen = imagecreatefromgif($nombreArchivo);
-                    }
-                    imagecopyresampled($imagen_nueva, $imagen, 0, 0, 0, 0, $ancho_base, $altura_base, $ancho, $alto);
-                    $nombre_foto_temp = explode(".",$nombre_foto);
-                    $nombre_foto_temp = $nombre_foto_temp[0];
-                    $nombreArchivoMuestraPeq  = $rutasGlobales["temp"]."/temp_".date("Y-m-d-H-i-s")."_".$nombre_foto_temp;
-
-                    if ($extension == "jpg"){
-                        imagejpeg($imagen_nueva, $nombreArchivoMuestraPeq);
-                    } else if ($extension == "png"){
-                        $negro = imagecolorallocate($imagen_nueva, 0, 0, 0);
-                        $blanco = imagecolorallocate($imagen_nueva, 255, 255, 255);
-                        imagecolortransparent($imagen_nueva, $negro);
-                        imagefilledrectangle($imagen_nueva, 0, 0, 0, 0, $blanco);
-                        imagepng($imagen_nueva, $nombreArchivoMuestraPeq);
-                        imagepng($imagen_nueva, $nombreArchivoMuestraPeq);
-                    } else if ($extension == "gif"){
-                        imagegif($imagen_nueva, $nombreArchivoMuestraPeq);
-                    }
-                    $archivoDescarga = $rutasGlobales["temp"]."/".date("Y-m-d-H-i-s")."_".$nombre_foto;
-                    copy($nombreArchivo, $archivoDescarga);
-                    $foto_articulo_principal = array(
-                        HTML::imagen($nombreArchivoMuestraPeq),
-                        HTML::enlazarPagina($textos["DESCARGAR_FOTO"],$archivoDescarga)
-                    );
-                }
-            }
-        }
-
+        
         $encabezado["PESTANA_GENERAL"] = array(
             $foto_articulo_principal,
             array(

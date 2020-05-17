@@ -80,7 +80,8 @@ $tablas["terceros"] = array(
     "genero"                  => "ENUM('M','F','N') NOT NULL DEFAULT 'N' COMMENT 'Género: M=Masculino, F=Femenino, N=No aplica'",
     "activo"                  => "ENUM('0','1') NOT NULL DEFAULT '1' COMMENT 'El tercero está activo 0=No, 1=Si'",
     "cliente"                 => "ENUM('0','1') NOT NULL DEFAULT '0' COMMENT 'Cliente 0=No, 1=Si'",
-    "proveedor"               => "ENUM('0','1') NOT NULL DEFAULT '0' COMMENT 'Cliente 0=No, 1=Si'"
+    "proveedor"               => "ENUM('0','1') NOT NULL DEFAULT '0' COMMENT 'Proveedor 0=No, 1=Si'",
+    "comprador"               => "ENUM('0','1') NOT NULL DEFAULT '0' COMMENT 'Comprador 0=No, 1=Si'"
 );
 
 $tablas["imagenes"] = array(
@@ -303,6 +304,22 @@ $registros["componentes"] = array(
         "padre"     => "NULL",
         "id_modulo" => "ADMINISTRACION",
         "orden"     => "4000",
+        "carpeta"   => "principal",
+        "archivo"   => "NULL"
+    ),
+    array(
+        "id"        => "MENUPROV",
+        "padre"     => "NULL",
+        "id_modulo" => "ADMINISTRACION",
+        "orden"     => "4500",
+        "carpeta"   => "principal",
+        "archivo"   => "NULL"
+    ),
+    array(
+        "id"        => "MENUINVE",
+        "padre"     => "NULL",
+        "id_modulo" => "ADMINISTRACION",
+        "orden"     => "5000",
         "carpeta"   => "principal",
         "archivo"   => "NULL"
     ),/*
