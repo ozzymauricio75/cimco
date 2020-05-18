@@ -132,62 +132,48 @@ $vistas = array(
     array(
         "CREATE OR REPLACE ALGORITHM = MERGE VIEW pance_menu_compradores AS
         SELECT
-            pance_compradores.id AS id,
+            pance_terceros.id AS id,
             pance_compradores.activo AS id_activo,
             pance_terceros.documento_identidad AS DOCUMENTO_IDENTIDAD,
-            pance_terceros.primer_nombre AS PRIMER_NOMBRE,
-            pance_terceros.segundo_nombre AS SEGUNDO_NOMBRE,
-            pance_terceros.primer_apellido AS PRIMER_APELLIDO,
-            pance_terceros.segundo_apellido AS SEGUNDO_APELLIDO,
-            CONCAT(pance_terceros.documento_identidad,' ',(
-                IF(pance_terceros.primer_nombre = ' ',
-                    CONCAT(pance_terceros.segundo_nombre,' ',pance_terceros.segundo_nombre,' ',pance_terceros.primer_apellido,' ',pance_terceros.segundo_apellido),
-                        pance_terceros.razon_social
-                    )
-                )
-            )AS NOMBRE_COMPLETO,
+            CONCAT(IF(pance_terceros.primer_nombre IS NOT NULL,pance_terceros.primer_nombre,''),' ',
+                    IF(pance_terceros.segundo_nombre IS NOT NULL,pance_terceros.segundo_nombre,''),' ',
+                    IF(pance_terceros.primer_apellido IS NOT NULL,pance_terceros.primer_apellido,''),' ',
+                    IF(pance_terceros.segundo_apellido IS NOT NULL,pance_terceros.segundo_apellido,''),' ',
+                    IF(pance_terceros.razon_social IS NOT NULL,pance_terceros.razon_social,''))AS NOMBRE_COMPLETO,
             IF (pance_compradores.activo = '1',
                 'Activo',
                 'Inactivo'
             ) AS ACTIVO
         FROM
             pance_terceros,
-            pance_tipos_documento_identidad,
             pance_compradores
         WHERE
             pance_compradores.id_tercero = pance_terceros.id AND
-            pance_compradores.id > 0
+            pance_terceros.comprador > 0
         ORDER BY
             pance_terceros.primer_nombre, pance_terceros.razon_social;"
     ),
     array(
         "CREATE OR REPLACE ALGORITHM = MERGE VIEW pance_buscador_compradores AS
         SELECT
-            pance_compradores.id AS id,
+            pance_terceros.id AS id,
             pance_compradores.activo AS id_activo,
             pance_terceros.documento_identidad AS DOCUMENTO_IDENTIDAD,
-            pance_terceros.primer_nombre AS PRIMER_NOMBRE,
-            pance_terceros.segundo_nombre AS SEGUNDO_NOMBRE,
-            pance_terceros.primer_apellido AS PRIMER_APELLIDO,
-            pance_terceros.segundo_apellido AS SEGUNDO_APELLIDO,
-            CONCAT(pance_terceros.documento_identidad,' ',(
-                IF(pance_terceros.primer_nombre = ' ',
-                    CONCAT(pance_terceros.segundo_nombre,' ',pance_terceros.segundo_nombre,' ',pance_terceros.primer_apellido,' ',pance_terceros.segundo_apellido),
-                        pance_terceros.razon_social
-                    )
-                )
-            )AS NOMBRE_COMPLETO,
+            CONCAT(IF(pance_terceros.primer_nombre IS NOT NULL,pance_terceros.primer_nombre,''),' ',
+                    IF(pance_terceros.segundo_nombre IS NOT NULL,pance_terceros.segundo_nombre,''),' ',
+                    IF(pance_terceros.primer_apellido IS NOT NULL,pance_terceros.primer_apellido,''),' ',
+                    IF(pance_terceros.segundo_apellido IS NOT NULL,pance_terceros.segundo_apellido,''),' ',
+                    IF(pance_terceros.razon_social IS NOT NULL,pance_terceros.razon_social,''))AS NOMBRE_COMPLETO,
             IF (pance_compradores.activo = '1',
                 'Activo',
                 'Inactivo'
             ) AS ACTIVO
         FROM
             pance_terceros,
-            pance_tipos_documento_identidad,
             pance_compradores
         WHERE
             pance_compradores.id_tercero = pance_terceros.id AND
-            pance_compradores.id > 0
+            pance_terceros.comprador > 0
         ORDER BY
             pance_terceros.primer_nombre, pance_terceros.razon_social;"
     ),

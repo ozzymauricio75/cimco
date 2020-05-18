@@ -204,6 +204,7 @@ if (!empty($url_generar)) {
     /*** Asumir por defecto que no hubo error ***/
     $error   = false;
     $mensaje = $textos["ITEM_ADICIONADO"];
+    $valida_graba = false;
 
     if (empty($forma_documento_identidad) ||
         empty($forma_tipo_persona) ||
@@ -271,18 +272,21 @@ if (!empty($url_generar)) {
                 $error   = true;
                 $mensaje = $textos["ERROR_MODIFICAR_ITEM"];
             }
-            // Verificar si hubo error
-        if (!$id_tercero){
-            $error   = true;
-            $mensaje = $textos["ERROR_ADICIONAR_ITEM"];
-        } else {
+        }
+        $tabla = "terceros";
+            $columnas          = SQL::obtenerColumnas($tabla);
+            $consulta          = SQL::seleccionar(array($tabla), $columnas, "documento_identidad = '$forma_documento_identidad'");
+            $datos             = SQL::filaEnObjeto($consulta);
+            $id_tercero        = $datos->id;
+
             $datos_compradores = array(
                 "id_tercero"          => $id_tercero,
                 "activo"              => "1",
                 "id_usuario_registra" => $sesion_id_usuario_ingreso,
                 "fecha_registra"      => date("Y-m-d H:i:s"),
-                "fecha_modificacion"  => "0000-00-00 00:00:00"
+                "fecha_modificacion"  => date("Y-m-d H:i:s")
             );
+            
             $id_comprador = SQL::insertar("compradores",$datos_compradores, true);
             if (!$id_comprador){
                 $error   = true;
@@ -291,9 +295,8 @@ if (!empty($url_generar)) {
                     $eliminar = SQL::eliminar("terceros","id='$id_tercero'");
                 }
             }
-        }
     }
-}
+
     /*** Enviar datos con la respuesta del proceso al script que origin� la petici�n ***/
     $respuesta    = array();
     $respuesta[0] = $error;
