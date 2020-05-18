@@ -24,6 +24,7 @@
 * <http://www.gnu.org/licenses/>.
 *
 **/
+
 /*** Devolver datos para autocompletar la búsqueda ***/
 if (isset($url_completar)) {
 

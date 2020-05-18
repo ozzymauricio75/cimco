@@ -122,7 +122,7 @@ if (!empty($url_generar)) {
             HTML::campoTextoCorto("*documento_identidad", $textos["DOCUMENTO_COMPRADOR"], 15, 15, "",array("title" => $textos["AYUDA_DOCUMENTO_PROVEEDOR"],"onblur" => "validarItem(this);","onchange" => "cargarDatos()"))
         ),
         array(
-            HTML::campoTextoCorto("*selector1", $textos["MUNICIPIO"], 40, 255, "", array("title" => $textos["AYUDA_DOCUMENTO_MUNICIPIO"], "class" => "autocompletable")).HTML::campoOculto("id_municipio_documento", "")
+            HTML::campoTextoCorto("*selector1", $textos["MUNICIPIO_EXPEDICION"], 40, 255, "", array("title" => $textos["AYUDA_DOCUMENTO_MUNICIPIO"], "class" => "autocompletable")).HTML::campoOculto("id_municipio_documento", "")
         ),
         array(
             HTML::listaSeleccionSimple("*id_tipo_documento", $textos["TIPO_DOCUMENTO_IDENTIDAD"], HTML::generarDatosLista("tipos_documento_identidad", "id", "descripcion"), $id_tipo_documento)

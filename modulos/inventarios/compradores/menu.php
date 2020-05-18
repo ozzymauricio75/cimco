@@ -40,7 +40,7 @@ $botones  = HTML::boton("ADICCMPR",$textos["ADICIONAR"],"ejecutarComando(this,66
 $botones .= HTML::boton("CONSCMPR",$textos["CONSULTAR"],"ejecutarComando(this,660,540);","consultar");
 $botones .= HTML::boton("MODICMPR",$textos["MODIFICAR"],"ejecutarComando(this,660,540);","modificar");
 $botones .= HTML::boton("ELIMCMPR",$textos["ELIMINAR"],"ejecutarComando(this,660,540);","eliminar");
-$botones .= HTML::boton("LISTCMPR",$textos["EXPORTAR"],"ejecutarComando(this,520,380);","exportar");
+//$botones .= HTML::boton("LISTCMPR",$textos["EXPORTAR"],"ejecutarComando(this,520,380);","exportar");
 
 // Obtener el numero de la pagina actual
 if (empty($url_pagina)) {

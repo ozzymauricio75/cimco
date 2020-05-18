@@ -6,7 +6,7 @@
 * Raul Mauricio Oidor Lozano <ozzymauricio75@gmail.com>
 *
 * Este archivo es parte de:
-* SEM :: Software empresarial a la medida
+* PANCE :: Software empresarial a la medida
 *
 * Este programa es software libre: usted puede redistribuirlo y/o
 * modificarlo  bajo los términos de la Licencia Pública General GNU
@@ -25,6 +25,7 @@
 *
 **/
 
+
 /*** Generar el formulario para la captura de datos ***/
 if (!empty($url_generar)) {
 
@@ -35,177 +36,118 @@ if (!empty($url_generar)) {
         $contenido = "";
 
     } else {
-        $vistaConsulta = "compradores";
-        $columnas      = SQL::obtenerColumnas($vistaConsulta);
-        $consulta      = SQL::seleccionar(array($vistaConsulta), $columnas, "id = '$url_id'");
-        $datos_comprador = SQL::filaEnObjeto($consulta);
-
-        $vistaConsulta = "terceros";
-        $columnas      = SQL::obtenerColumnas($vistaConsulta);
-        $consulta      = SQL::seleccionar(array($vistaConsulta), $columnas, "id = '$datos_comprador->id_tercero'");
-        $datos         = SQL::filaEnObjeto($consulta);
-
-        $error  = "";
-        $titulo = $componente->nombre;
-
-        $municipio = explode('|',SQL::obtenerValor("seleccion_municipios","nombre","id = '$datos->id_municipio_documento'"));
-        $municipio = $municipio[0];
-        $localidad = explode('|',SQL::obtenerValor("seleccion_localidades","nombre","id = '$datos->id_localidad'"));
-        $localidad = $localidad[0];
-
-        $persona = array(
-            "1" => $textos["PERSONA_NATURAL"],
-            "2" => $textos["PERSONA_JURIDICA"],
-            "3" => $textos["CODIGO_INTERNO"],
-            "4" => $textos["NATURAL_COMERCIANTE"]
+        $vistaConsulta                  = "terceros";
+        $columnas                       = SQL::obtenerColumnas($vistaConsulta);
+        $consulta                       = SQL::seleccionar(array($vistaConsulta), $columnas, "id = '$url_id'");
+        $datos                          = SQL::filaEnObjeto($consulta);
+        $error                          = "";
+        $titulo                         = $componente->nombre; 
+        $documento_identidad            = $datos->documento_identidad;
+        $tipo_documento_identidad       = SQL::obtenerValor("tipos_documento_identidad", "descripcion", "id = '$datos->id_tipo_documento'");
+        $nombre_municipio_documento     = SQL::obtenerValor("municipios", "nombre", "id = '$datos->id_municipio_documento'");
+        $departamento_documento         = SQL::obtenerValor("municipios", "id_departamento", "id = '$datos->id_municipio_documento'");
+        $nombre_departamento_documento  = SQL::obtenerValor("departamentos", "nombre", "id = '$departamento_documento'");
+        $pais_documento                 = SQL::obtenerValor("departamentos", "id_pais", "id = '$departamento_documento'");
+        $nombre_pais_documento          = SQL::obtenerValor("paises", "nombre", "id = '$pais_documento'");
+        $nombre_localidad_residencia    = SQL::obtenerValor("localidades", "nombre", "id = '$datos->id_municipio_residencia'");
+        $municipio_residencia           = SQL::obtenerValor("localidades", "id_municipio", "id = '$datos->id_municipio_residencia'");
+        $nombre_municipio_residencia    = SQL::obtenerValor("municipios", "nombre", "id = '$municipio_residencia'");
+        $departamento_residencia        = SQL::obtenerValor("municipios", "id_departamento", "id = '$municipio_residencia'");
+        $nombre_departamento_residencia = SQL::obtenerValor("departamentos", "nombre", "id = '$departamento_residencia'");
+        $pais_residencia                = SQL::obtenerValor("departamentos", "id_pais", "id = '$departamento_residencia'");
+        $nombre_pais_residencia         = SQL::obtenerValor("paises", "nombre", "id = '$pais_residencia'");
+        
+        $regimen = array(
+            "1" => $textos["REGIMEN_COMUN"],
+            "2" => $textos["REGIMEN_SIMPLIFICADO"]
         );
 
+        $tipo_persona = array(
+            "1" => $textos["PERSONA_NATURAL"],
+            "2" => $textos["PERSONA_JURIDICA"],
+            "3" => $textos["CODIGO_INTERNO"]
+        );
+
+        $inicio_cobro = array(
+            "1" => $textos["FECHA_FACTURA"],
+            "2" => $textos["FECHA_RECIBO"]
+        );
+        
+        $genero = array(
+            "M" => $textos["MASCULINO"],
+            "F" => $textos["FEMENINO"],
+            "N" => $textos["NO_APLICA"],
+        );
+    
         $activo = array(
             "0" => $textos["INACTIVO"],
             "1" => $textos["ACTIVO"]
         );
-
-        $genero = array(
-            "" => "",
-            "M" => $textos["MASCULINO"],
-            "F" => $textos["FEMENINO"],
-            "N" => $textos["NO_APLICA"]
-        );
-
-        $tipo_persona = SQL::obtenerValor("tipos_documento_identidad","tipo_persona","id='$datos->id_tipo_documento_identidad'");
-        $nombre_completo = SQL::obtenerValor("menu_terceros","NOMBRE_COMPLETO","id='$datos->id'");
-        $nombre = array(
-            HTML::mostrarDato("nombre", $textos["NOMBRE_COMPLETO"], $nombre_completo)
-        );
-
-        $fecha_nacimiento = array(
-            HTML::campoOculto("fecha_nacimiento", "")
-        );
-        if (($tipo_persona==1 || $tipo_persona==4) && $datos->fecha_nacimiento != "0000-00-00"){
-            $fecha_nacimiento = array(
-                HTML::mostrarDato("fecha_nacimiento", $textos["FECHA_NACIMIENTO"], $datos->fecha_nacimiento),
-            );
+        
+        if(($datos->tipo_persona) == 1){
+            $primer_nombre    = "PRIMER_NOMBRE";
+            $segundo_nombre   = "SEGUNDO_NOMBRE";
+            $primer_apellido  = "PRIMER_APELLIDO";
+            $segundo_apellido = "SEGUNDO_APELLIDO";
+            $razon_social     = "DATO_VACIO";
+        }else{
+            $razon_social     = "RAZON_SOCIAL";
+            $primer_nombre    = "DATO_VACIO";
+            $segundo_nombre   = "DATO_VACIO";
+            $primer_apellido  = "DATO_VACIO";
+            $segundo_apellido = "DATO_VACIO";
         }
 
-        $tipo_documento = SQL::obtenerValor("tipos_documento_identidad","descripcion","id = '".$datos->id_tipo_documento_identidad."'");
-
         /*** Definición de pestañas ***/
-        $encabezado["PESTANA_GENERAL"] = array(
-            $nombre,
+        $formularios["PESTANA_COMPRADOR"] = array(
             array(
-                HTML::mostrarDato("tipo_persona", $textos["TIPO_PERSONA"], $persona[$tipo_persona])
+                HTML::mostrarDato("documento_identidad", $textos["DOCUMENTO_COMPRADOR"], $datos->documento_identidad)
             ),
             array(
-                HTML::mostrarDato("tipo_documento", $textos["TIPO_DOCUMENTO_IDENTIDAD"], $tipo_documento),
-                HTML::mostrarDato("documento_identidad", $textos["DOCUMENTO_IDENTIDAD"], $datos->documento_identidad)
+                HTML::mostrarDato("tipo_persona", $textos["TIPO_PERSONA"], $tipo_persona[$datos->tipo_persona]),
+                HTML::mostrarDato("id_tipo_documento", $textos["TIPO_DOCUMENTO_IDENTIDAD"], $tipo_documento_identidad)
             ),
             array(
-                HTML::mostrarDato("municipio_documento", $textos["MUNICIPIO"], $municipio)
+                HTML::mostrarDato("primer_nombre", $textos["$primer_nombre"], $datos->primer_nombre),
+                HTML::mostrarDato("segundo_nombre", $textos["$segundo_nombre"], $datos->segundo_nombre),
+                HTML::mostrarDato("primer_apellido", $textos["$primer_apellido"], $datos->primer_apellido),
+                HTML::mostrarDato("segundo_apellido", $textos["$segundo_apellido"], $datos->segundo_apellido)
             ),
+            array(
+                HTML::mostrarDato("pais_documento", $textos["PAIS"], $nombre_pais_documento),
+                HTML::mostrarDato("departamento_documento", $textos["DEPARTAMENTO"], $nombre_departamento_documento),
+                HTML::mostrarDato("municipio_documento", $textos["MUNICIPIO"], $nombre_municipio_documento),
+            )
         );
-        $formularios["PESTANA_GENERAL"] = array(
-            $fecha_nacimiento,
+
+        /***Definición pestaña ubicacion***/
+        $formularios["PESTANA_UBICACION_COMPRADOR"] = array(
             array(
-                HTML::mostrarDato("localidad_residencia", $textos["LOCALIDAD"], $localidad),
+                HTML::mostrarDato("pais_residencia", $textos["PAIS"], $nombre_pais_residencia),
+                HTML::mostrarDato("departamento_residencia", $textos["DEPARTAMENTO"], $nombre_departamento_residencia)
             ),
             array(
-                HTML::mostrarDato("direccion_principal", $textos["DIRECCION"], $datos->direccion_principal)
+                HTML::mostrarDato("municipio_residencia", $textos["MUNICIPIO"], $nombre_municipio_residencia),
+                HTML::mostrarDato("localidad_residencia", $textos["LOCALIDAD"], $nombre_localidad_residencia)
             ),
             array(
-                HTML::mostrarDato("telefono_principal", $textos["TELEFONO"], $datos->telefono_principal),
+                HTML::mostrarDato("direccion_principal", $textos["DIRECCION"], $datos->direccion_principal),
+                HTML::mostrarDato("telefono_principal", $textos["TELEFONO_PRINCIPAL"], $datos->telefono_principal),
                 HTML::mostrarDato("fax", $textos["FAX"], $datos->fax),
                 HTML::mostrarDato("celular", $textos["CELULAR"], $datos->celular)
             ),
             array(
                 HTML::mostrarDato("correo", $textos["CORREO"], $datos->correo),
                 HTML::mostrarDato("sitio_web", $textos["SITIO_WEB"], $datos->sitio_web)
-            ),
-            array(
-                HTML::mostrarDato("correo2", $textos["CORREO2"], $datos->correo2),
-                HTML::mostrarDato("celular2", $textos["CELULAR2"], $datos->celular2)
-            ),
-            array(
-                HTML::mostrarDato("genero", $textos["GENERO"], $genero[$datos->genero]),
-                HTML::mostrarDato("activo", $textos["ESTADO"], $activo[$datos_comprador->activo])
             )
         );
 
-        if ($tipo_persona != "1" && $tipo_persona != "4"){
-            $datos_pestana = array();
-            if ($datos->documento_representante_legal != ""){
-                $datos_pestana[] = array(
-                    HTML::mostrarDato("documento_representante_legal", $textos["DOCUMENTO_REPRESENTANTE"], $datos->documento_representante_legal)
-                );
-            }
-            if ($datos->nombre_representante_legal != ""){
-                $datos_pestana[] = array(
-                    HTML::mostrarDato("nombre_representante_legal", $textos["NOMBRE_REPRESENTANTE"], $datos->nombre_representante_legal)
-                );
-            }
-            $datos_pestana[] = array(
-                HTML::mostrarDato("sociedad_grupo", $textos["SOCIEDAD_GRUPO"], $textos["SI_NO_".$datos->sociedad_grupo]),
-                HTML::mostrarDato("cliente_detal", $textos["CLIENTE_DETAL"], $textos["SI_NO_".$datos->cliente_detal]),
-                HTML::mostrarDato("cliente_mayorista", $textos["CLIENTE_MAYORISTA"], $textos["SI_NO_".$datos->cliente_mayorista])
-            );
-            $datos_pestana[] = array(
-                HTML::mostrarDato("filial", $textos["FILIAL"], $textos["SI_NO_".$datos->filial]),
-                HTML::mostrarDato("socio", $textos["SOCIO"], $textos["SI_NO_".$datos->socio]),
-                HTML::mostrarDato("empleado", $textos["EMPLEADO"], $textos["SI_NO_".$datos->empleado])
-            );
-            $datos_pestana[] = array(
-                HTML::mostrarDato("proveedor", $textos["PROVEEDOR"], $textos["SI_NO_".$datos->proveedor]),
-                HTML::mostrarDato("proveedor_servicios", $textos["PROVEEDOR_SERVICIOS"], $textos["SI_NO_".$datos->proveedor_servicios]),
-                HTML::mostrarDato("entidad_oficial", $textos["ENTIDAD_OFICIAL"], $textos["SI_NO_".$datos->entidad_oficial])
-            );
-
-            if ($datos->id_actividad_principal > 0){
-                $actividad_principal = SQL::obtenerValor("actividades_economicas", "descripcion", "id = '$datos->id_actividad_principal'");
-                $titulo_actividad_principal = $textos["ACTIVIDAD_PRINCIPAL"];
-                $datos_pestana[] = array(
-                    HTML::mostrarDato("actividad_primaria", $textos["ACTIVIDAD_PRINCIPAL"], $actividad_principal)
-                );
-            }
-            if ($datos->id_actividad_secundaria > 0){
-                $actividad_secundaria = SQL::obtenerValor("actividades_economicas", "descripcion", "id = '$datos->id_actividad_secundaria'");
-                $titulo_actividad_secundaria = $textos["ACTIVIDAD_SECUNDARIA"];
-                $datos_pestana[] = array(
-                    HTML::mostrarDato("actividad_secundaria", $textos["ACTIVIDAD_SECUNDARIA"], $actividad_secundaria)
-                );
-            }
-            $formularios["PESTANA_TRIBUTARIA"] = array();
-            $formularios["PESTANA_TRIBUTARIA"] = array_merge($formularios["PESTANA_TRIBUTARIA"],$datos_pestana);
-
-        }
-
-        $consulta_grupos = SQL::seleccionar(array("compradores_grupo_compradores"),array("id","id_grupo_comprador"),"id_comprador='$datos_comprador->id'");
-        if (SQL::filasDevueltas($consulta_grupos)){
-            while($datos_grupos = SQL::filaEnObjeto($consulta_grupos)){
-                $grupo_comprador = SQL::obtenerValor("grupo_compradores","descripcion","id='$datos_grupos->id_grupo_comprador'");
-                $grupos[] = array(
-                    $datos_grupos->id,
-                    $grupo_comprador
-                );
-            }
-        }
-        if (isset($grupos)){
-            $formularios["PESTANA_GRUPO_COMPRADORES"] = array(
-                array(
-                    HTML::generarTabla(
-                        array("id","GRUPO_COMPRADOR"),
-                        $grupos,
-                        array("I"),
-                        "listaGrupos",
-                        false
-                    )
-                )
-            );
-        }
         /*** Definición de botones ***/
         $botones = array(
             HTML::boton("botonAceptar", $textos["ACEPTAR"], "eliminarItem('$url_id');", "aceptar")
         );
 
-        $contenido = HTML::generarPestanas($formularios, $botones,"","",$encabezado);
+        $contenido = HTML::generarPestanas($formularios, $botones);
     }
 
     /*** Enviar datos para la generación del formulario al script que originó la petición ***/
@@ -216,39 +158,14 @@ if (!empty($url_generar)) {
     HTTP::enviarJSON($respuesta);
 
 /*** Eliminar el elemento seleccionado ***/
-} elseif (!empty($forma_procesar)) {
-    $id_tercero = SQL::obtenerValor("compradores","id_tercero","id='$forma_id'");
-    $consulta_grupos = SQL::seleccionar(array("compradores_grupo_compradores"),array("*"),"id_comprador='$forma_id'");
-    if (SQL::filasDevueltas($consulta_grupos)){
-        while($datos = SQL::filaEnObjeto($consulta_grupos)){
-            $id_tabla[]                  = $datos->id;
-            $id_comprador_tabla[]        = $forma_id;
-            $id_grupo_comprador_tabla[]  = $datos->id_grupo_comprador;
-            $id_usuario_registra_tabla[] = $datos->id_usuario_registra;
-            $fecha_registra_tabla[]      = $datos->fecha_registra;
-            $fecha_modificacion_tabla[]  = $datos->fecha_modificacion;
-        }
-    }
-    $eliminar = SQL::eliminar("compradores_grupo_compradores", "id_comprador = '$forma_id'");
-    $eliminar = SQL::eliminar("compradores", "id = '$forma_id'");
+} elseif (!empty($forma_procesar)) {  
+    $consulta_comprador = SQL::eliminar("compradores", "id_tercero = '$forma_id'");
+    $consulta           = SQL::eliminar("terceros", "id = '$forma_id'");
 
-    if ($eliminar) {
+    if ($consulta) {
         $error   = false;
         $mensaje = $textos["ITEM_ELIMINADO"];
-        $eliminar = SQL::eliminar("terceros", "id = '$id_tercero'");
-
     } else {
-        foreach($id_tabla AS $indice => $valor){
-            $datos = array(
-                "id"                          => $valor,
-                "id_comprador"                => $forma_id,
-                "id_grupo_comprador"          => $id_grupo_comprador_tabla[$indice],
-                "id_usuario_registra"         => $id_usuario_registra_tabla[$indice],
-                "fecha_registra"              => $fecha_registra_tabla[$indice],
-                "fecha_modificacion"          => $fecha_modificacion_tabla[$indice]
-            );
-            $insertar = SQL::insertar("compradores_grupo_compradores",$datos);
-        }
         $error   = true;
         $mensaje = $textos["ERROR_ELIMINAR_ITEM"];
     }
