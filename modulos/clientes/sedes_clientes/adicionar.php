@@ -2,8 +2,7 @@
 
 /**
 *
-* Copyright (C) 2009 FELINUX Ltda
-* Francisco J. Lozano B. <fjlozano@felinux.com.co>
+* Copyright (C) 2020 Raul Mauricio Oidor Lozano
 * Mauricio Oidor L. <ozzymauricio75@gmail.com>
 *
 * Este archivo es parte de:

@@ -6,7 +6,7 @@
 * Raul Mauricio Oidor Lozano <ozzymauricio75@gmail.com>
 *
 * Este archivo es parte de:
-* SEM :: Software empresarial a la medida
+* PANCE :: Software empresarial a la medida
 *
 * Este programa es software libre: usted puede redistribuirlo y/o
 * modificarlo  bajo los términos de la Licencia Pública General GNU
@@ -24,21 +24,77 @@
 * <http://www.gnu.org/licenses/>.
 *
 **/
-
+$tabla = "usuarios";
+$columnas                   = SQL::obtenerColumnas($tabla);
+$consulta                   = SQL::seleccionar(array($tabla), $columnas, "usuario = '$sesion_usuario'");
+$datos                      = SQL::filaEnObjeto($consulta);
+$sesion_id_usuario_ingreso  = $datos->id;
 /*** Generar el formulario para la captura de datos ***/
 if (!empty($url_generar)) {
+
+    $genero = array(
+        "M" => $textos["MASCULINO"],
+        "F" => $textos["FEMENINO"],
+        "N" => $textos["NO_APLICA"],
+    );
+    
+    $tipo_inventario = array(
+        "1" => $textos["MATERIA_PRIMA"],
+        "2" => $textos["SUMINISTRO"]
+    );
+
     $error  = "";
     $titulo = $componente->nombre;
 
+    /*** Obtener lista de sucursales para selección ***/
+    /*$tablas     = array(
+        "a" => "perfiles_usuario",
+        "b" => "componentes_usuario",
+        "c" => "sucursales"
+    );
 
+    $columnas = array(
+        "id"        => "c.id",
+        "nombre"    => "c.nombre_corto"
+    );
+
+    $condicion = "c.id = a.id_sucursal AND a.id = b.id_perfil
+                  AND a.id_usuario = '$sesion_id_usuario'
+                  AND b.id_componente = '".$componente->id."'";
+
+    $consulta = SQL::seleccionar($tablas, $columnas, $condicion);
+
+    /*** Verificar si el usuario tiene privilegios en las sucursales autorizadas ***/
+    /*if (SQL::filasDevueltas($consulta)) { 
+       
+        while ($datos = SQL::filaEnObjeto($consulta)) {
+            $sucursales[$datos->id] = $datos->nombre;
+        }
+    }/*
+    
     /*** Definición de pestañas general ***/
     $formularios["PESTANA_GENERAL"] = array(
         array(
-            HTML::campoTextoCorto("*descripcion", $textos["DESCRIPCION"], 30, 255, "", array("title" => $textos["AYUDA_DESCRIPCION"],"onBlur" => "validarItem(this);"))
+            HTML::listaSeleccionSimple("*id_sucursal", $textos["SUCURSAL"],HTML::generarDatosLista("sucursales", "id", "nombre"), "", array("title" => $textos["AYUDA_SUCURSALES"],"onBlur" => "validarItem(this);"))
+            ),
+        array(
+            HTML::campoTextoCorto("*codigo", $textos["CODIGO"], 30, 255, "", array("title" => $textos["AYUDA_CODIGO"],"onBlur" => "validarItem(this);"))
         ),
         array(
-            HTML::listaSeleccionSimple("caracteristica", $textos["CARACTERISTICA"], $caracteristica, "", array("title" => $textos["AYUDA_CARACTERISTICA"]))
-        )
+            HTML::campoTextoCorto("*detalle", $textos["DETALLE"], 30, 255, "", array("title" => $textos["AYUDA_DETALLE"],"onBlur" => "validarItem(this);"))
+        ),
+        array(
+            HTML::campoTextoCorto("*referencia", $textos["REFERENCIA"], 30, 255, "", array("title" => $textos["AYUDA_REFERENCIA"],"onBlur" => "validarItem(this);"))
+        ),
+        array(
+            HTML::campoTextoCorto("*precio", $textos["COSTO"], 12, 12, "", array("title" => $textos["AYUDA_COSTO"], "class" => "numero", "onblur" => "validarItem(this);"))
+        ),
+        array(
+            HTML::listaSeleccionSimple("*tipo_inventario", $textos["TIPO_INVENTARIO"], $tipo_inventario, "", array("title" => $textos["AYUDA_TIPO_INVENTARIO"]))
+        ),
+        array(
+            HTML::listaSeleccionSimple("*tasa", $textos["TASA_IMPUESTO"], HTML::generarDatosLista("tasas", "id", "descripcion"), "", array("title" => $textos["AYUDA_TASA_IMPUESTO"],"onBlur" => "validarItem(this);"))
+        ),
     );
 
     /*** Definición de botones ***/
@@ -54,51 +110,61 @@ if (!empty($url_generar)) {
     $respuesta[2] = $contenido;
     HTTP::enviarJSON($respuesta);
 
-/*** Validar los datos provenientes del formulario ***/
-} elseif (!empty($url_validar)) {
-
-    /*** Validar descripcion ***/
-    if ($url_item == "descripcion") {
-        $existe = SQL::existeItem("marcas", "descripcion", $url_valor,"descripcion !=''");
-
-        if ($existe) {
-            HTTP::enviarJSON($textos["ERROR_EXISTE_DESCRIPCION"]);
-        }
-    }
-
 /*** Adicionar los datos provenientes del formulario ***/
 } elseif (!empty($forma_procesar)) {
     /*** Asumir por defecto que no hubo error ***/
     $error   = false;
     $mensaje = $textos["ITEM_ADICIONADO"];
 
-    if(empty($forma_descripcion)){
+    if(empty($forma_codigo)){
         $error   = true;
-        $mensaje = $textos["DESCRIPCION_VACIO"];
+        $mensaje = $textos["CODIGO_VACIO"];
 
-    }elseif($existe = SQL::existeItem("marcas", "descripcion", $forma_descripcion)){
+    }elseif(empty($forma_detalle)){
         $error   = true;
-        $mensaje = $textos["ERROR_EXISTE_DESCRIPCION"];
+        $mensaje = $textos["DETALLE_VACIO"];
+
+    }elseif(empty($forma_referencia)){
+        $error   = true;
+        $mensaje = $textos["DESCRIPCION_VACIO"];  
+
+    }elseif(empty($forma_precio)){
+        $error   = true;
+        $mensaje = $textos["PRECIO_VACIO"];
+
+    }elseif(empty($forma_tipo_inventario)){
+        $error   = true;
+        $mensaje = $textos["TIPO_INVENTARIO_VACIO"];     
+
+    }elseif(empty($forma_tasa)){
+        $error   = true;
+        $mensaje = $textos["TASA_VACIO"];        
 
     }else {
-        if (!isset($forma_caracteristica) || empty($forma_caracteristica)){
-            $forma_caracteristica = "0";
-        }
         /*** Insertar datos ***/
         $datos = array(
-            "descripcion"    => $forma_descripcion,
-            "caracteristica" => $forma_caracteristica,
+            "id_sucursal"         => $forma_id_sucursal,
+            "codigo"              => $forma_codigo,
+            "detalle"             => $forma_detalle,
+            "referencia"          => $forma_referencia,
+            "tipo_inventario"     => $forma_tipo_inventario,
+            "estado"              => 1,
+            "precio"              => $forma_precio,
+            "id_tasa"             => $forma_tasa,
             "id_usuario_registra" => $sesion_id_usuario_ingreso,
-            "fecha_registra" => date("Y-m-d H:i:s"),
-            "fecha_modificacion" => "0000-00-00 00:00:00"
+            "fecha_registra"      => date("Y-m-d H:i:s"),
+            "fecha_modificacion"  => date("Y-m-d H:i:s")
         );
 
-        $insertar = SQL::insertar("marcas", $datos);
+        $insertar = SQL::insertar("articulos", $datos);
 
         /*** Error de inserción ***/
         if (!$insertar) {
             $error   = true;
             $mensaje = $textos["ERROR_ADICIONAR_ITEM"];
+        }else{
+            $error   = false;
+            $mensaje = $textos["ITEM_ADICIONADO"];
         }
     }
     /*** Enviar datos con la respuesta del proceso al script que originó la petición ***/

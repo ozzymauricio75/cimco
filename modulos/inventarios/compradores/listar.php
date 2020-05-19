@@ -5,7 +5,7 @@
 * Raul Mauricio Oidor Lozano <ozzymauricio75@gmail.com>
 *
 * Este archivo es parte de:
-* SEM :: Software empresarial a la medida
+* PANCE :: Software empresarial a la medida
 *
 * Este programa es software libre: usted puede redistribuirlo y/o
 * modificarlo  bajo los terminos de la Licencia Publica General GNU

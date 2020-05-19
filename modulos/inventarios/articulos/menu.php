@@ -6,7 +6,7 @@
 * Raul Mauricio Oidor Lozano <ozzymauricio75@gmail.com>
 *
 * Este archivo es parte de:
-* SEM :: Software empresarial a la medida
+* PANCE :: Software empresarial a la medida
 *
 * Este programa es software libre: usted puede redistribuirlo y/o
 * modificarlo  bajo los términos de la Licencia Pública General GNU
@@ -37,10 +37,10 @@ if (isset($url_completar)) {
 }
 
 /*** Generar botones de comandos ***/
-//$botones  = HTML::boton("ADICARTI",$textos["ADICIONAR"],"ejecutarComando(this,700,600);","adicionar");
-$botones = HTML::boton("CONSARTI",$textos["CONSULTAR"],"ejecutarComando(this,700,600);","consultar");
+$botones  = HTML::boton("ADICARTI",$textos["ADICIONAR"],"ejecutarComando(this,700,600);","adicionar");
+$botones .= HTML::boton("CONSARTI",$textos["CONSULTAR"],"ejecutarComando(this,700,600);","consultar");
 $botones .= HTML::boton("MODIARTI",$textos["MODIFICAR"],"ejecutarComando(this,700,600);","modificar");
-//$botones .= HTML::boton("ELIMARTI",$textos["ELIMINAR"],"ejecutarComando(this,700,600);","eliminar");
+$botones .= HTML::boton("ELIMARTI",$textos["ELIMINAR"],"ejecutarComando(this,700,600);","eliminar");
 $botones .= HTML::boton("LISTARTI",$textos["EXPORTAR"],"ejecutarComando(this,700,600);","imprimir");
 
 /*** Obtener el número de la página actual ***/

@@ -6,7 +6,7 @@
 * Raul Mauricio Oidor Lozano <ozzymauricio75@gmail.com>
 *
 * Este archivo es parte de:
-* SEM :: Software empresarial a la medida
+* PANCE :: Software empresarial a la medida
 *
 * Este programa es software libre: usted puede redistribuirlo y/o
 * modificarlo  bajo los términos de la Licencia Pública General GNU
@@ -31,7 +31,7 @@ $tablas["articulos"] = array(
     "codigo"                  => "VARCHAR(15) NOT NULL COMMENT 'Codigo interno'",
     "detalle"                 => "VARCHAR(40) NOT NULL COMMENT 'Detalle del articulo'",
     "referencia"              => "VARCHAR(15) NOT NULL COMMENT 'Referencia principal del articulo'",
-    "tipo_inventario"         => "ENUM('0','1','2','3') NOT NULL DEFAULT '0' COMMENT '0->Mercancia 1->Materia prima 2->Suministro 3->Obsequio'",
+    "tipo_inventario"         => "ENUM(1','2') NOT NULL DEFAULT '1' COMMENT '1->Materia prima 2->Suministro'",
     "estado"                  => "ENUM('0','1') NOT NULL DEFAULT '0' COMMENT 'Inactivo 0->No 1->Si'",
     "precio"                  => "DECIMAL(11,4) NOT NULL COMMENT 'Precio'",
     "id_tasa"                 => "INT(7) UNSIGNED ZEROFILL NOT NULL COMMENT 'Id de la tabla tasas'",

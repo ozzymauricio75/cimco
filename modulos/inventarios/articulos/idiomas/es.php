@@ -6,7 +6,7 @@
 * Raul Mauricio Oidor Lozano <ozzymauricio75@gmail.com>
 *
 * Este archivo es parte de:
-* SEM :: Software empresarial a la medida
+* PANCE :: Software empresarial a la medida
 *
 * Este programa es software libre: usted puede redistribuirlo y/o
 * modificarlo  bajo los términos de la Licencia Pública General GNU
@@ -26,12 +26,14 @@
 **/
 
 $textos = array(
+    //MENSAJES DE BOTONES
     "GESTARTI"                 => "Articulos",
-    "ADICARTI"                 => "Adicionar articulo",
-    "CONSARTI"                 => "Consultar articulo",
-    "MODIARTI"                 => "Modificar articulo",
-    "ELIMARTI"                 => "Eliminar articulo",
-    "LISTARTI"                 => "Listado de articulos",
+    "ADICARTI"                 => "Adicionar Articulo",
+    "CONSARTI"                 => "Consultar Articulo",
+    "MODIARTI"                 => "Modificar Articulo",
+    "ELIMARTI"                 => "Eliminar Articulo",
+    "LISTARTI"                 => "Listado de Articulos",
+    //MENSAJES DE PESTAÑA
     "PESTANA_GENERAL"          => "General",
     "PESTANA_FOTO"             => "Fotos",
     "PESTANA_REFERENCIAS"      => "Referencias alternas",
@@ -69,6 +71,9 @@ $textos = array(
     "OBSEQUIO"                 => "Obsequio",
     "CODIGO_ORIGINAL"          => "Codigo original",
     "COMBO"                    => "Combo",
+    "PRECIO"                   => "Precio",
+    "COSTO"                    => "Costo",
+    "TASA_IMPUESTO"            => "Tasa Impuesto",
     "KIT"                      => "Kit",
     "TIPO_INVENTARIO"          => "Tipo inventario",
     "DETALLE_ITEMS"            => "Detalla items",
@@ -82,16 +87,30 @@ $textos = array(
     "POR_LOTE"                 => "Por lote",
     "NIVEL_PRECIO_PUBLICO"     => "Nivel precio al publico",
     "POPULAR"                  => "Popular",
+    "SUCURSAL"                 => "Sucursal",
     "ECONOMICO"                => "Economico",
     "FINO"                     => "Fino",
     "MANEJA_COLOR"             => "Maneja color",
     "ELIMINA_FOTO"             => "Elimina foto",
     "ELIMINA_FOTO_PRINCIPAL"   => "Elimina foto principal",
     "FOTO"                     => "Foto principal",
-    "AYUDA_FOTO"               => "Seleccione la foto principal del articulo",
-    "FOTO_NUEVA"               => "Nueva foto",
-    "AYUDA_FOTO"               => "Seleccione la nueva foto principal del articulo",
     "DESCARGAR_FOTO"           => "Descargar foto",
-    "EXISTE_INCOMPLETA"        => "Estado estructura grupo"
+    "EXISTE_INCOMPLETA"        => "Estado estructura grupo",
+    //MENSAJES DE ERRORES
+    "CODIGO_VACIO"             => "Error, debe ingresar el código del articulo",
+    "DETALLE_VACIO"            => "Error, debe ingresar el detalle del articulo",
+    "DESCRIPCION_VACIO"        => "Error, debe ingresar la descripción del articulo",
+    "PRECIO_VACIO"             => "Error, debe ingresar el precio del articulo",
+    "TIPO_INVENTARIO_VACIO"    => "Error, debe ingresar el tipo de inventario del articulo",
+    "TASA_VACIO"               => "Error, debe ingresar la tasa del articulo",
+    // MENSAJES DE AYUDA
+    "AYUDA_FOTO"               => "Seleccione la foto principal del articulo",
+    "AYUDA_CODIGO"             => "Digite el código del articulo",
+    "FOTO_NUEVA"               => "Nueva foto",
+    "AYUDA_DETALLE"            => "Digite el detalle o descripción del articulo",
+    "AYUDA_REFERENCIA"         => "Digite la referencia del articulo",
+    "AYUDA_TIPO_INVENTARIO"    => "Digite el tipo de inventario del articulo",
+    "AYUDA_COSTO"              => "Digite costo del articulo",
+    "AYUDA_SUCURSAL"           => "Digite la sucursal del articulo"
 );
 ?>
