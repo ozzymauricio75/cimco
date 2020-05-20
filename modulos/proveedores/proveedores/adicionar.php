@@ -24,6 +24,12 @@
 * <http://www.gnu.org/licenses/>.
 *
 **/
+$tabla = "usuarios";
+$columnas                   = SQL::obtenerColumnas($tabla);
+$consulta                   = SQL::seleccionar(array($tabla), $columnas, "usuario = '$sesion_usuario'");
+$datos                      = SQL::filaEnObjeto($consulta);
+$sesion_id_usuario_ingreso  = $datos->id;
+
 /*** Devolver datos para autocompletar la búsqueda ***/
 if (isset($url_completar)) {
 
@@ -144,8 +150,36 @@ if (!empty($url_generar)) {
         )
     );
 
+     /*** Definición de pestaña tributaria ***/
+    $formularios["PESTANA_TRIBUTARIA"] = array(
+        array(
+            HTML::listaSeleccionSimple("regimen", $textos["REGIMEN"], $regimen)
+        ),
+        array(
+            HTML::marcaChequeo("retiene_fuente", $textos["RETIENE_FUENTE"])
+        ),
+        array(
+            HTML::marcaChequeo("autoretenedor", $textos["AUTORETENEDOR"])
+        ),
+        array(
+            HTML::marcaChequeo("retiene_iva", $textos["RETIENE_IVA"])
+        ),
+        array(
+            HTML::marcaChequeo("retiene_ica", $textos["RETIENE_ICA"])
+        ),
+        array(
+            HTML::marcaChequeo("gran_contribuyente", $textos["GRAN_CONTRIBUYENTE"])
+        ),
+    );
+
     /*** Definición de pestañas para la ubicación del tercero***/
     $formularios["PESTANA_UBICACION_PROVEEDOR"] = array(
+        array(
+            HTML::listaSeleccionSimple("*id_actividad_principal", $textos["ACTIVIDAD_PRINCIPAL"], HTML::generarDatosLista("actividades_economicas", "id", "descripcion"), "", array("title" => $textos["AYUDA_ACTIVIDAD_PRINCIPAL"],"onBlur" => "validarItem(this);"))
+        ),
+        array(
+            HTML::listaSeleccionSimple("*id_actividad_secundaria", $textos["ACTIVIDAD_SECUNDARIA"], HTML::generarDatosLista("actividades_economicas", "id", "descripcion"), "", array("title" => $textos["AYUDA_ACTIVIDAD_SECUNDARIA"],"onBlur" => "validarItem(this);"))
+        ),      
         array(
             HTML::campoTextoCorto("*selector1", $textos["MUNICIPIO"], 40, 255, "", array("title" => $textos["AYUDA_DOCUMENTO_MUNICIPIO"], "class" => "autocompletable", "onblur" => "recargarLista('id_municipio_documento','id_municipio_residencia');")).HTML::campoOculto("id_municipio_documento", "")
         ),
@@ -167,6 +201,16 @@ if (!empty($url_generar)) {
         array(
             HTML::campoTextoCorto("sitio_web", $textos["SITIO_WEB"], 50, 50, "", array("title" => $textos["AYUDA_SITIO_WEB"]))
         )
+    );
+
+    /*** Definición de pestaña PAGOS ***/
+    $formularios["PESTANA_PAGOS"] = array(
+        array(
+            HTML::listaSeleccionSimple("id_forma_pago_contado", $textos["FORMA_PAGO_CONTADO"], HTML::generarDatosLista("plazos_pago_proveedores", "id", "nombre"))
+        ),
+        array(
+            HTML::listaSeleccionSimple("id_forma_pago_credito", $textos["FORMA_PAGO_CREDITO"], HTML::generarDatosLista("plazos_pago_proveedores", "id", "nombre"))
+        ),
     );
 
     /*** Definición de botones ***/
@@ -274,9 +318,9 @@ if (!empty($url_generar)) {
                 $error   = true;
                 $mensaje = $textos["ERROR_ADICIONAR_ITEM"];
             }
-            
+            $idAsignado = SQL::$ultimoId;
         }else{
-            $modificar = SQL::modificar("terceros", $datos, "id = '$id_tercero'");
+            $modificar = SQL::modificar("terceros", $datos, "id = '$idAsignado'");
             if ($modificar) {
                 $error   = false;
                 $mensaje = $textos["ITEM_MODIFICADO"];
@@ -284,6 +328,60 @@ if (!empty($url_generar)) {
                 $error   = true;
                 $mensaje = $textos["ERROR_MODIFICAR_ITEM"];
             }
+        }
+
+        if (!isset($forma_retiene_fuente)) {
+            $forma_retiene_fuente = "0";
+        }
+        if (!isset($forma_autoretenedor)) {
+            $forma_autoretenedor = "0";
+        }
+        if (!isset($forma_retiene_iva)) {
+            $forma_retiene_iva = "0";
+        }
+        if (!isset($forma_retiene_ica)) {
+            $forma_retiene_ica = "0";
+        }
+        if (!isset($forma_gran_contribuyente)) {
+            $forma_gran_contribuyente = "0";
+        }
+        
+        if (!isset($forma_pagos_anticipados)) {
+            $forma_pagos_anticipados = "0";
+        }
+        if (!isset($forma_pagos_efectivo)) {
+            $forma_pagos_efectivo = "0";
+        }
+        
+        /*$tabla      = "terceros";
+        $columnas   = SQL::obtenerColumnas($tabla);
+        $consulta   = SQL::seleccionar(array($tabla), $columnas, "documento_identidad = '$forma_documento_identidad'");
+        $datos      = SQL::filaEnObjeto($consulta);
+        $id_tercero = $datos->id;*/
+
+        $datos_proveedor = array(
+            "id_tercero"              => $idAsignado,
+            "id_forma_pago_contado"   => $forma_id_forma_pago_contado,
+            "id_forma_pago_credito"   => $forma_id_forma_pago_credito,
+            "regimen"                 => $forma_regimen,
+            "retiene_fuente"          => $forma_retiene_fuente,
+            "autoretenedor"           => $forma_autoretenedor,
+            "retiene_iva"             => $forma_retiene_iva,
+            "retiene_ica"             => $forma_retiene_ica,
+            "gran_contribuyente"      => $forma_gran_contribuyente,
+            "id_actividad_principal"  => $forma_id_actividad_principal,
+            "id_actividad_secundaria" => $forma_id_actividad_secundaria,
+            "id_usuario_registra"     => $sesion_id_usuario_ingreso,
+            "fecha_registra"          => date("Y-m-d H:i:s"),
+            "fecha_modificacion"      => date("Y-m-d H:i:s")
+        );
+           
+        $insertar = SQL::insertar("proveedores", $datos_proveedor);
+
+        /*** Error de inserción ***/
+        if (!$insertar) {
+            $error   = true;
+            $mensaje = $textos["ERROR_ADICIONAR_ITEM"];
         }
     }
 

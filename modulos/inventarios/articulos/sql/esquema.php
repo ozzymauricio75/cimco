@@ -28,11 +28,12 @@ $borrarSiempre["articulos"] = false;
 $tablas["articulos"] = array(
     "id"                      => "INT(9) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT COMMENT 'Llave primaria'",
     "id_sucursal"             => "MEDIUMINT(5) UNSIGNED ZEROFILL NOT NULL COMMENT 'Id de la tabla sucursales'",
+    "id_proveedor"            => "INT(8) UNSIGNED ZEROFILL NOT NULL COMMENT 'Id de la tabla terceros'",
     "codigo"                  => "VARCHAR(15) NOT NULL COMMENT 'Codigo interno'",
     "detalle"                 => "VARCHAR(40) NOT NULL COMMENT 'Detalle del articulo'",
     "referencia"              => "VARCHAR(15) NOT NULL COMMENT 'Referencia principal del articulo'",
-    "tipo_inventario"         => "ENUM(1','2') NOT NULL DEFAULT '1' COMMENT '1->Materia prima 2->Suministro'",
-    "estado"                  => "ENUM('0','1') NOT NULL DEFAULT '0' COMMENT 'Inactivo 0->No 1->Si'",
+    "tipo_inventario"         => "ENUM('1','2') NOT NULL DEFAULT '1' COMMENT '1->Materia prima 2->Suministro'",
+    "estado"                  => "ENUM('0','1') NOT NULL DEFAULT '1' COMMENT 'Inactivo 0->No 1->Si'",
     "precio"                  => "DECIMAL(11,4) NOT NULL COMMENT 'Precio'",
     "id_tasa"                 => "INT(7) UNSIGNED ZEROFILL NOT NULL COMMENT 'Id de la tabla tasas'",
     "id_usuario_registra"     => "SMALLINT(4) UNSIGNED ZEROFILL NOT NULL DEFAULT '0' COMMENT 'Id del usuario que genera el registro'",
@@ -73,6 +74,16 @@ $llavesForaneas["articulos"] = array(
         "id_sucursal",
         // Nombre de la tabla relacionada
         "sucursales",
+        // Nombre del campo clave en la tabla relacionada
+        "id"
+    ),
+    array(
+        // Nombre de la llave
+        "articulos_terceros",
+        // Nombre del campo clave de la tabla local
+        "id_proveedor",
+        // Nombre de la tabla relacionada
+        "terceros",
         // Nombre del campo clave en la tabla relacionada
         "id"
     ),

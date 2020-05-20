@@ -2,24 +2,24 @@
 
 /**
 *
-* Copyright (C) 2008 LinuxCali Ltda
-* Francisco J. Lozano B. <pacho@linuxcali.com>
+* Copyright (C) 2020 Raul Mauricio Oidor Lozano
+* Raul Mauricio Oidor Lozano. <ozzymauricio75@gmail.com>
 *
 * Este archivo es parte de:
-* PANCE :: Plataforma para la Administraci�n del Nexo Cliente-Empresa
+* PANCE :: Plataforma para la Administración del Nexo Cliente-Empresa
 *
 * Este programa es software libre: usted puede redistribuirlo y/o
-* modificarlo  bajo los t�rminos de la Licencia P�blica General GNU
-* publicada por la Fundaci�n para el Software Libre, ya sea la versi�n 3
-* de la Licencia, o (a su elecci�n) cualquier versi�n posterior.
+* modificarlo  bajo los términos de la Licencia Pública General GNU
+* publicada por la Fundación para el Software Libre, ya sea la versión 3
+* de la Licencia, o (a su elección) cualquier versión posterior.
 *
-* Este programa se distribuye con la esperanza de que sea �til, pero
-* SIN GARANT�A ALGUNA; ni siquiera la garant�a impl�cita MERCANTIL o
-* de APTITUD PARA UN PROP�SITO DETERMINADO. Consulte los detalles de
-* la Licencia P�blica General GNU para obtener una informaci�n m�s
+* Este programa se distribuye con la esperanza de que sea útil, pero
+* SIN GARANTÍA ALGUNA; ni siquiera la garantía implícita MERCANTIL o
+* de APTITUD PARA UN PROPÓSITO DETERMINADO. Consulte los detalles de
+* la Licencia Pública General GNU para obtener una información más
 * detallada.
 *
-* Deber�a haber recibido una copia de la Licencia P�blica General GNU
+* Debería haber recibido una copia de la Licencia P{ublica General GNU
 * junto a este programa. En caso contrario, consulte:
 * <http://www.gnu.org/licenses/>.
 *
@@ -27,13 +27,16 @@
 
 $textos = array(
     "MENUCLIE"            => "Clientes",
+    "MENUPROV"            => "Proveedores",
     "SUBMMAYO"            => "Mayoristas",
     "SUBMMINO"            => "Minoristas",
     "SUBMVEMA"            => "Ventas",
     "SUBMCOMA"            => "Cobranzas",
+    "SUBMDCPV"            => "Datos de control",
     "SUBMDCMA"            => "Datos de control",
     "SUBMCOSE"            => "Control de servicios",
-    "GESTPROV"            => "Creación proveedores",
+    "SUBMCOMP"            => "Datos de control",
+    "GESTPROV"            => "Creacion de proveedores",
     "GESTCLMA"            => "Clientes mayoristas",
     "GESTSUMA"            => "Sucursales",
     "GESTTRMA"            => "Transacciones clientes mayoristas",

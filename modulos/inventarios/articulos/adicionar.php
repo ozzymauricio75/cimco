@@ -45,7 +45,34 @@ if (!empty($url_generar)) {
 
     $error  = "";
     $titulo = $componente->nombre;
+}
 
+$consulta = SQL::seleccionar(array("terceros"),array("*"),"id > 0 AND proveedor='1'");
+    if (SQL::filasDevueltas($consulta)){
+
+        while ($datos = SQL::filaEnObjeto($consulta)) {
+            if($datos->tipo_persona==1){
+                $nombre_proveedor
+            }    
+        }
+    
+        $sedes = HTML::generarDatosLista("sedes_clientes", "id", "nombre_sede","id_sucursal IN (".implode(",", $sucursales_sedes).")");
+        /*$datos_tercero = SQL::filaEnObjeto($consulta);
+        $datos = array(                                                                                                                                                                                                                                                   
+            $datos_tercero->primer_nombre,
+            $datos_tercero->segundo_nombre,
+            $datos_tercero->primer_apellido,
+            $datos_tercero->segundo_apellido,
+            $datos_tercero->razon_social,
+            $datos_tercero->tipo_persona     
+        );*/
+    }
+    if ($datos[5]==1){
+        $nombre_proveedor = $datos_tercero[0]." ".$datos_tercero[1]." ".$datos_tercero[2]." ".$datos_tercero[3];
+    }elseif ($datos[5]==2){
+            $nombre_proveedor = $razon_social;
+    }
+    
     /*** Obtener lista de sucursales para selección ***/
     /*$tablas     = array(
         "a" => "perfiles_usuario",
@@ -76,6 +103,9 @@ if (!empty($url_generar)) {
     $formularios["PESTANA_GENERAL"] = array(
         array(
             HTML::listaSeleccionSimple("*id_sucursal", $textos["SUCURSAL"],HTML::generarDatosLista("sucursales", "id", "nombre"), "", array("title" => $textos["AYUDA_SUCURSALES"],"onBlur" => "validarItem(this);"))
+            ),
+        array(
+            HTML::listaSeleccionSimple("*id_proveedor", $textos["PROVEEDOR"],$nombre_proveedor, "", array("title" => $textos["AYUDA_PROVEEDOR"],"onBlur" => "validarItem(this);"))
             ),
         array(
             HTML::campoTextoCorto("*codigo", $textos["CODIGO"], 30, 255, "", array("title" => $textos["AYUDA_CODIGO"],"onBlur" => "validarItem(this);"))

@@ -45,48 +45,20 @@ $registros["componentes"] = array(
         "archivo"   => "NULL"
     ),*/
     array(
-        "id"        => "GESTPROV",
-        "padre"     => "MENUPROV",
+        "id"        => "MENUPROV",
+        "padre"     => "NULL",
         "id_modulo" => "PROVEEDORES",
-        "orden"     => "0005",
-        "carpeta"   => "proveedores",
-        "archivo"   => "menu"
+        "orden"     => "4200",
+        "carpeta"   => "principal",
+        "archivo"   => "NULL"
     ),
     array(
-        "id"        => "ADICPROV",
+        "id"        => "SUBMDCPV",
         "padre"     => "MENUPROV",
         "id_modulo" => "PROVEEDORES",
-        "visible"   => "0",
-        "orden"     => "00010",
-        "carpeta"   => "proveedores",
-        "archivo"   => "adicionar"
-    ),
-    array(
-        "id"        => "CONSPROV",
-        "padre"     => "MENUPROV",
-        "id_modulo" => "PROVEEDORES",
-        "visible"   => "0",
-        "orden"     => "0012",
-        "carpeta"   => "proveedores",
-        "archivo"   => "consultar"
-    ),
-    array(
-        "id"        => "MODIPROV",
-        "padre"     => "MENUPROV",
-        "id_modulo" => "PROVEEDORES",
-        "visible"   => "0",
-        "orden"     => "0014",
-        "carpeta"   => "proveedores",
-        "archivo"   => "modificar"
-    ),
-    array(
-        "id"        => "ELIMPROV",
-        "padre"     => "MENUPROV",
-        "id_modulo" => "PROVEEDORES",
-        "visible"   => "0",
-        "orden"     => "0016",
-        "carpeta"   => "proveedores",
-        "archivo"   => "eliminar"
+        "orden"     => "1000",
+        "carpeta"   => "principal",
+        "archivo"   => "NULL"
     )
     /*
     array(

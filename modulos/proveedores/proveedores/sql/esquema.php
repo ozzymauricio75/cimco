@@ -24,6 +24,84 @@
 * <http://www.gnu.org/licenses/>.
 *
 **/
+/*** Eliminar la tabla y crearla de nuevo cada vez que se ejecute el script de creación ***/
+$borrarSiempre = false;
+
+/*** Definición de tablas ***/
+$tablas ["proveedores"] = array(
+    "id"                        => "INT(8) UNSIGNED ZEROFILL AUTO_INCREMENT NOT NULL COMMENT 'Consecutivo interno para la base de datos'",
+    "id_tercero"              => "INT(8) UNSIGNED ZEROFILL NOT NULL COMMENT 'Id de la tabla de terceros'",
+    "id_forma_pago_contado"   => "SMALLINT(3) UNSIGNED ZEROFILL NOT NULL DEFAULT '0' COMMENT 'Numero de dias para pago de contado'",
+    "id_forma_pago_credito"   => "SMALLINT(3) UNSIGNED ZEROFILL NOT NULL DEFAULT '0' COMMENT 'Numero de dias para pago a credito'",
+    "regimen"                 => "ENUM('1','2') DEFAULT '1' COMMENT '1->Regimen comun 2->Regimen simplificado'",
+    "retiene_fuente"          => "ENUM('0','1') DEFAULT '0' COMMENT 'Realiza retencion en la fuente 0->No 1->Si'",
+    "autoretenedor"           => "ENUM('0','1') NOT NULL DEFAULT '0' COMMENT 'Autoretenedor 0->No 1->Si'",
+    "retiene_iva"             => "ENUM('0','1') NOT NULL DEFAULT '0' COMMENT 'Retiene IVA 0->No 1->Si'",
+    "retiene_ica"             => "ENUM('0','1') NOT NULL DEFAULT '0' COMMENT 'Retiene ICA 0->No 1->Si'",
+    "gran_contribuyente"      => "ENUM('0','1') NOT NULL COMMENT 'Empresa esta catalogada como gran contribuyente por la DIAN 0->No 1-Si'",
+    "id_actividad_principal"  => "SMALLINT(4) UNSIGNED ZEROFILL NOT NULL COMMENT 'Actividad económica principal a la cual se dedica la Empresa'",
+    "id_actividad_secundaria" => "SMALLINT(4) UNSIGNED ZEROFILL NOT NULL COMMENT 'Actividad económica secundaria a la cual se dedica la Empresa'",
+    "id_usuario_registra"     => "SMALLINT(4) UNSIGNED ZEROFILL NOT NULL DEFAULT '0' COMMENT 'Id del usuario que genera el registro'",
+    "fecha_registra"          => "DATETIME NOT NULL DEFAULT '0000-00-00' COMMENT 'Fecha ingreso al sistema'",
+    "fecha_modificacion"      => "TIMESTAMP NOT NULL DEFAULT '0000-00-00' COMMENT 'Fecha ultima modificación'"
+);
+
+/*** Definición de llaves primarias ***/
+$llavesPrimarias["proveedores"] = "id";
+
+/*** Definición de llaves foráneas ***/
+$llavesForaneas["proveedores"] = array(
+    array(
+        /*** Nombre de la llave ***/
+        "proveedor_tercero",
+        /*** Nombre del campo clave de la tabla local ***/
+        "id_tercero",
+        /*** Nombre de la tabla relacionada ***/
+        "terceros",
+        /*** Nombre del campo clave en la tabla relacionada ***/
+        "id"
+    ),
+    array(
+        /*** Nombre de la llave ***/
+        "proveedor_actividad_principal",
+        /*** Nombre del campo clave de la tabla local ***/
+        "id_actividad_principal",
+        /*** Nombre de la tabla relacionada ***/
+        "actividades_economicas",
+        /*** Nombre del campo clave en la tabla relacionada ***/
+        "id"
+    ),
+    array(
+        /*** Nombre de la llave ***/
+        "proveedor_actividad_secundaria",
+        /*** Nombre del campo clave de la tabla local ***/
+        "id_actividad_secundaria",
+        /*** Nombre de la tabla relacionada ***/
+        "actividades_economicas",
+        /*** Nombre del campo clave en la tabla relacionada ***/
+        "id"
+    ),
+    array(
+        /*** Nombre de la llave ***/
+        "proveedor_forma_pago_contado",
+        /*** Nombre del campo clave de la tabla local ***/
+        "id_forma_pago_contado",
+        /*** Nombre de la tabla relacionada ***/
+        "plazos_pago_proveedores",
+        /*** Nombre del campo clave en la tabla relacionada ***/
+        "id"
+    ),
+    array(
+        /*** Nombre de la llave ***/
+        "proveedor_forma_pago_credito",
+        /*** Nombre del campo clave de la tabla local ***/
+        "id_forma_pago_credito",
+        /*** Nombre de la tabla relacionada ***/
+        "plazos_pago_proveedores",
+        /*** Nombre del campo clave en la tabla relacionada ***/
+        "id"
+    )    
+);
 
 /*** Inserción de datos iniciales ***/
 $registros["componentes"] = array(
@@ -47,15 +125,16 @@ $registros["componentes"] = array(
     ),*/
     array(
         "id"        => "GESTPROV",
-        "padre"     => "MENUPROV",
+        "padre"     => "SUBMDCPV",
         "id_modulo" => "PROVEEDORES",
-        "orden"     => "0005",
+        "visible"   => "1",
+        "orden"     => "1000",
         "carpeta"   => "proveedores",
         "archivo"   => "menu"
     ),
     array(
         "id"        => "ADICPROV",
-        "padre"     => "MENUPROV",
+        "padre"     => "GESTPROV",
         "id_modulo" => "PROVEEDORES",
         "visible"   => "0",
         "orden"     => "00010",
@@ -64,7 +143,7 @@ $registros["componentes"] = array(
     ),
     array(
         "id"        => "CONSPROV",
-        "padre"     => "MENUPROV",
+        "padre"     => "GESTPROV",
         "id_modulo" => "PROVEEDORES",
         "visible"   => "0",
         "orden"     => "0012",
@@ -73,7 +152,7 @@ $registros["componentes"] = array(
     ),
     array(
         "id"        => "MODIPROV",
-        "padre"     => "MENUPROV",
+        "padre"     => "GESTPROV",
         "id_modulo" => "PROVEEDORES",
         "visible"   => "0",
         "orden"     => "0014",
@@ -82,7 +161,7 @@ $registros["componentes"] = array(
     ),
     array(
         "id"        => "ELIMPROV",
-        "padre"     => "MENUPROV",
+        "padre"     => "GESTPROV",
         "id_modulo" => "PROVEEDORES",
         "visible"   => "0",
         "orden"     => "0016",

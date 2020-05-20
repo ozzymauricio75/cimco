@@ -111,6 +111,7 @@ $textos = array(
     "AYUDA_REFERENCIA"         => "Digite la referencia del articulo",
     "AYUDA_TIPO_INVENTARIO"    => "Digite el tipo de inventario del articulo",
     "AYUDA_COSTO"              => "Digite costo del articulo",
-    "AYUDA_SUCURSAL"           => "Digite la sucursal del articulo"
+    "AYUDA_SUCURSAL"           => "Digite la sucursal del articulo",
+    "AYUDA_PROVEEDOR"          => "Digite el proveedor del articulo"
 );
 ?>

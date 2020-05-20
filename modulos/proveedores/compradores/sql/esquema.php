@@ -75,8 +75,8 @@ $llavesForaneas["compradores"] = array(
 $registros["componentes"] = array(
     array(
         "id"              => "GESTCMPR",
-        "padre"           => "MENUPROV",
-        "id_modulo"       => "INVENTARIO",
+        "padre"           => "SUBMDCPV",
+        "id_modulo"       => "PROVEEDORES",
         "orden"           => "8000",
         "visible"         => "1",
         "carpeta"         => "compradores",
@@ -85,7 +85,7 @@ $registros["componentes"] = array(
     array(
         "id"              => "ADICCMPR",
         "padre"           => "GESTCMPR",
-        "id_modulo"       => "INVENTARIO",
+        "id_modulo"       => "PROVEEDORES",
         "visible"         => "0",
         "orden"           => "0005",
         "carpeta"         => "compradores",
@@ -94,7 +94,7 @@ $registros["componentes"] = array(
     array(
         "id"              => "CONSCMPR",
         "padre"           => "GESTCMPR",
-        "id_modulo"       => "INVENTARIO",
+        "id_modulo"       => "PROVEEDORES",
         "visible"         => "0",
         "orden"           => "0010",
         "carpeta"         => "compradores",
@@ -103,7 +103,7 @@ $registros["componentes"] = array(
     array(
         "id"              => "MODICMPR",
         "padre"           => "GESTCMPR",
-        "id_modulo"       => "INVENTARIO",
+        "id_modulo"       => "PROVEEDORES",
         "visible"         => "0",
         "orden"           => "0015",
         "carpeta"         => "compradores",
@@ -112,7 +112,7 @@ $registros["componentes"] = array(
     array(
         "id"              => "ELIMCMPR",
         "padre"           => "GESTCMPR",
-        "id_modulo"       => "INVENTARIO",
+        "id_modulo"       => "PROVEEDORES",
         "visible"         => "0",
         "orden"           => "0020",
         "carpeta"         => "compradores",
@@ -121,7 +121,7 @@ $registros["componentes"] = array(
     array(
         "id"              => "LISTCMPR",
         "padre"           => "GESTCMPR",
-        "id_modulo"       => "INVENTARIO",
+        "id_modulo"       => "PROVEEDORES",
         "visible"         => "0",
         "orden"           => "0025",
         "carpeta"         => "compradores"
