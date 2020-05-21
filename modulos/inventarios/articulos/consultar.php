@@ -133,7 +133,7 @@ if (!empty($url_generar)) {
         }
 
         /*** Definición de pestañas ***/
-        $formularios["PESTANA_DATOS_GENREALES"] = array(
+        $formularios["PESTANA_DATOS_GENERALES"] = array(
             $foto_articulo_principal,
             array(
                 HTML::mostrarDato("codigo",$textos["CODIGO"],$datos->codigo),

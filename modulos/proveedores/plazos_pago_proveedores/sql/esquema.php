@@ -51,7 +51,7 @@ $registros["componentes"] = array(
         "padre"     => "SUBMDCPV",
         "id_modulo" => "PROVEEDORES",
         "visible"   => "1",
-        "orden"     => "0065",
+        "orden"     => "3000",
         "carpeta"   => "plazos_pago_proveedores",
         "archivo"   => "menu"
     ),

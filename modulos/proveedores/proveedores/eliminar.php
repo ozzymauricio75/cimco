@@ -56,6 +56,22 @@ if (!empty($url_generar)) {
         $pais_residencia                = SQL::obtenerValor("departamentos", "id_pais", "id = '$departamento_residencia'");
         $nombre_pais_residencia         = SQL::obtenerValor("paises", "nombre", "id = '$pais_residencia'");
         
+        /***Obtener los datos de la tabla de proveedores***/
+        $vistaProveedor       = "proveedores";
+        $columnasProveedor    = SQL::obtenerColumnas($vistaProveedor);
+        $consultaProveedor    = SQL::seleccionar(array($vistaProveedor), $columnasProveedor, "id_tercero = '$url_id'");
+        $datosProveedor       = SQL::filaEnObjeto($consultaProveedor);
+        $actividad_principal  = SQL::obtenerValor("actividades_economicas", "descripcion", "id = '$datosProveedor->id_actividad_principal'");
+        $actividad_secundaria = SQL::obtenerValor("actividades_economicas", "descripcion", "id = '$datosProveedor->id_actividad_secundaria'");
+        $forma_pago_contado   = SQL::obtenerValor("plazos_pago_proveedores","nombre","id = '$datosProveedor->id_forma_pago_contado'");
+        $forma_pago_credito   = SQL::obtenerValor("plazos_pago_proveedores","nombre","id = '$datosProveedor->id_forma_pago_credito'");
+
+        /*** Obtener los datos de la tabla de terceros ***/
+        $vistaTercero    = "terceros";
+        $columnasTercero = SQL::obtenerColumnas($vistaTercero);
+        $consultaTercero = SQL::seleccionar(array($vistaTercero), $columnasTercero, "id = '$datosProveedor->id_tercero'");
+        $datosTercero    = SQL::filaEnObjeto($consultaTercero);
+
         $regimen = array(
             "1" => $textos["REGIMEN_COMUN"],
             "2" => $textos["REGIMEN_SIMPLIFICADO"]
@@ -99,6 +115,12 @@ if (!empty($url_generar)) {
 
         /*** Definición de pestañas ***/
         $formularios["PESTANA_PROVEEDOR"] = array(
+            array(
+                HTML::mostrarDato("actividad_principal", $textos["ACTIVIDAD_PRINCIPAL"], $actividad_principal)
+            ),
+            array(
+                HTML::mostrarDato("actividad_secundaria", $textos["ACTIVIDAD_SECUNDARIA"], $actividad_secundaria)
+            ),
             array(
                 HTML::mostrarDato("documento_identidad", $textos["DOCUMENTO_PROVEEDOR"], $datos->documento_identidad)
             ),
@@ -146,6 +168,35 @@ if (!empty($url_generar)) {
                 HTML::mostrarDato("sitio_web", $textos["SITIO_WEB"], $datos->sitio_web)
             )
         );
+        /*** Definición de pestaña tributaria ***/
+        $formularios["PESTANA_TRIBUTARIA"] = array(
+            array(
+                HTML::mostrarDato("regimen", $textos["REGIMEN"], $regimen[$datosProveedor->regimen])
+            ),
+            array(
+                HTML::mostrarDato("retiene_fuente", $textos["RETIENE_FUENTE"], $textos["SI_NO_".intval($datosProveedor->retiene_fuente)])
+            ),
+            array(
+                HTML::mostrarDato("autoretenedor", $textos["AUTORETENEDOR"], $textos["SI_NO_".intval($datosProveedor->autoretenedor)]),
+            ),
+            array(
+                HTML::mostrarDato("retiene_iva", $textos["RETIENE_IVA"], $textos["SI_NO_".intval($datosProveedor->retiene_iva)])
+            ),
+            array(
+                HTML::mostrarDato("retiene_ica", $textos["RETIENE_ICA"], $textos["SI_NO_".intval($datosProveedor->retiene_ica)])
+            ),
+            array(
+                HTML::mostrarDato("gran_contribuyente", $textos["GRAN_CONTRIBUYENTE"], $textos["SI_NO_".intval($datosProveedor->gran_contribuyente)])
+            ),
+        );
+        /*** Definición de pestaña pagos ***/
+        $formularios["PESTANA_PAGOS"] = array(
+            array(
+                HTML::mostrarDato("id_forma_pago_contado", $textos["FORMA_PAGO_CONTADO"], $forma_pago_contado)
+            ),array(
+                HTML::mostrarDato("id_forma_pago_credito", $textos["FORMA_PAGO_CREDITO"], $forma_pago_credito)
+            ),
+        );
 
         /*** Definición de botones ***/
         $botones = array(
@@ -163,12 +214,15 @@ if (!empty($url_generar)) {
     HTTP::enviarJSON($respuesta);
 
 /*** Eliminar el elemento seleccionado ***/
-} elseif (!empty($forma_procesar)) {  
-    $consulta = SQL::eliminar("terceros", "id = '$forma_id'");
+} elseif (!empty($forma_procesar)) {
+    $id_tercero = SQL::obtenerValor("proveedores", "id_tercero", "id_tercero = '$forma_id'");
+    
+    $consulta = SQL::eliminar("proveedores", "id_tercero = '$forma_id'");
 
     if ($consulta) {
         $error   = false;
         $mensaje = $textos["ITEM_ELIMINADO"];
+        $consulta = SQL::eliminar("terceros", "id = '$id_tercero'");
     } else {
         $error   = true;
         $mensaje = $textos["ERROR_ELIMINAR_ITEM"];

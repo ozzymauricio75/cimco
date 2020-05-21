@@ -24,7 +24,11 @@
 * <http://www.gnu.org/licenses/>.
 *
 **/
-
+$tabla = "usuarios";
+$columnas                   = SQL::obtenerColumnas($tabla);
+$consulta                   = SQL::seleccionar(array($tabla), $columnas, "usuario = '$sesion_usuario'");
+$datos                      = SQL::filaEnObjeto($consulta);
+$sesion_id_usuario_ingreso  = $datos->id;
 /*** Devolver datos para autocompletar la búsqueda ***/
 if (isset($url_completar)) {
 
@@ -55,6 +59,13 @@ if (!empty($url_generar)) {
         $contenido = "";
 
     } else {
+        
+        /***Obtener los datos de la tabla de proveedores***/
+        $vistaProveedor       = "proveedores";
+        $columnasProveedor    = SQL::obtenerColumnas($vistaProveedor);
+        $consultaProveedor    = SQL::seleccionar(array($vistaProveedor), $columnasProveedor, "id_tercero = '$url_id'");
+        $datosProveedor       = SQL::filaEnObjeto($consultaProveedor);
+        
         $vistaConsulta = "terceros";
         $condicion     = "id = '$url_id'";
         $columnas      = SQL::obtenerColumnas($vistaConsulta);
@@ -62,6 +73,7 @@ if (!empty($url_generar)) {
         $datos         = SQL::filaEnObjeto($consulta);
         $error         = "";
         $titulo        = $componente->nombre;
+        $id_tercero    = $datos->id;
         
         if ($datos->tipo_persona  == 1){
             $valor_persona_natural    = true;
@@ -82,7 +94,7 @@ if (!empty($url_generar)) {
             $valor_oculto_natural     = "oculto";
             $valor_oculto_juridica    = "";
         }
-        
+
         $tipo_documento_identidad       = SQL::obtenerValor("tipos_documento_identidad", "descripcion", "id = '$datos->id_tipo_documento'");
         $nombre_municipio_documento     = SQL::obtenerValor("municipios", "nombre", "id = '$datos->id_municipio_documento'");
         $departamento_documento         = SQL::obtenerValor("municipios", "id_departamento", "id = '$datos->id_municipio_documento'");
@@ -122,6 +134,12 @@ if (!empty($url_generar)) {
 
         /*** Definición de pestañas para datos del tercero***/
         $formularios["PESTANA_PROVEEDOR"] = array(
+            array(
+                HTML::listaSeleccionSimple("*id_actividad_principal", $textos["ACTIVIDAD_PRINCIPAL"], HTML::generarDatosLista("actividades_economicas", "id", "descripcion"), $datosProveedor->id_actividad_principal, array("title" => $textos["AYUDA_ACTIVIDAD_PRINCIPAL"],"onBlur" => "validarItem(this);"))
+            ),
+            array(
+                HTML::listaSeleccionSimple("*id_actividad_secundaria", $textos["ACTIVIDAD_SECUNDARIA"], HTML::generarDatosLista("actividades_economicas", "id", "descripcion"), $datosProveedor->id_actividad_secundaria, array("title" => $textos["AYUDA_ACTIVIDAD_SECUNDARIA"],"onBlur" => "validarItem(this);"))
+            ),
             array(
                 HTML::campoTextoCorto("*documento_identidad", $textos["DOCUMENTO_PROVEEDOR"], 15, 15, $datos->documento_identidad,array("title" => $textos["AYUDA_DOCUMENTO_PROVEEDOR"],"onblur" => "validarItem(this);"))
             ),
@@ -176,6 +194,38 @@ if (!empty($url_generar)) {
                 HTML::campoTextoCorto("sitio_web", $textos["SITIO_WEB"], 50, 50, $datos->sitio_web, array("title" => $textos["AYUDA_SITIO_WEB"]))
             )
         );
+
+        /*** Definición de pestaña tributaria ***/
+        $formularios["PESTANA_TRIBUTARIA"] = array(
+            array(
+                HTML::listaSeleccionSimple("regimen", $textos["REGIMEN"], $regimen, $datosProveedor->regimen)
+            ),
+            array(
+                HTML::marcaChequeo("retiene_fuente", $textos["RETIENE_FUENTE"], 1, $datosProveedor->retiene_fuente)
+            ),
+            array(
+                HTML::marcaChequeo("autoretenedor", $textos["AUTORETENEDOR"],1, $datosProveedor->autoretenedor)
+            ),
+            array(
+                HTML::marcaChequeo("retiene_iva", $textos["RETIENE_IVA"], 1, $datosProveedor->retiene_iva)
+            ),
+            array(
+                HTML::marcaChequeo("retiene_ica", $textos["RETIENE_ICA"],1, $datosProveedor->retiene_ica)
+            ),
+            array(
+                HTML::marcaChequeo("gran_contribuyente", $textos["GRAN_CONTRIBUYENTE"],1, $datosProveedor->gran_contribuyente)
+            )
+        );
+        /*** Definición de pestaña PAGOS ***/
+        $formularios["PESTANA_PAGOS"] = array(
+            array(
+                HTML::listaSeleccionSimple("id_forma_pago_contado", $textos["FORMA_PAGO_CONTADO"], HTML::generarDatosLista("plazos_pago_proveedores", "id", "nombre"), $datosProveedor->id_forma_pago_contado),
+            ),array(
+                HTML::listaSeleccionSimple("id_forma_pago_credito", $textos["FORMA_PAGO_CREDITO"], HTML::generarDatosLista("plazos_pago_proveedores", "id", "nombre"), $datosProveedor->id_forma_pago_credito),
+            ),
+        );
+
+
 
         /*** Definición de botones ***/
         $botones = array(
@@ -236,7 +286,7 @@ if (!empty($url_generar)) {
             $forma_primer_apellido  = "";
             $forma_segundo_apellido = "";
         } 
-        
+
         $datos = array(
             "documento_identidad"     => $forma_documento_identidad,
             "tipo_persona"            => $forma_tipo_persona,
@@ -259,8 +309,43 @@ if (!empty($url_generar)) {
             "sitio_web"               => $forma_sitio_web
         );
 
-        $consulta = SQL::modificar("terceros", $datos, "id = '$forma_id'");
+        $consulta   = SQL::modificar("terceros", $datos, "id = '$forma_id'");
         
+        if (!isset($forma_retiene_fuente)) {
+            $forma_retiene_fuente = "0";
+        }
+        if (!isset($forma_autoretenedor)) {
+            $forma_autoretenedor = "0";
+        }
+        if (!isset($forma_retiene_iva)) {
+            $forma_retiene_iva = "0";
+        }
+        if (!isset($forma_retiene_ica)) {
+            $forma_retiene_ica = "0";
+        }
+        if (!isset($forma_gran_contribuyente)) {
+            $forma_gran_contribuyente = "0";
+        }
+
+        $datos = array(
+            "id_tercero"                => $forma_id,
+            "regimen"                   => $forma_regimen,
+            "retiene_fuente"            => $forma_retiene_fuente,
+            "autoretenedor"             => $forma_autoretenedor,
+            "retiene_iva"               => $forma_retiene_iva,
+            "retiene_ica"               => $forma_retiene_ica,
+            "gran_contribuyente"        => $forma_gran_contribuyente,
+            "id_actividad_principal"    => $forma_id_actividad_principal,
+            "id_actividad_secundaria"   => $forma_id_actividad_secundaria,
+            "id_forma_pago_contado"     => $forma_id_forma_pago_contado,
+            "id_forma_pago_credito"     => $forma_id_forma_pago_credito,
+            "id_usuario_registra"       => $sesion_id_usuario_ingreso,
+            "fecha_registra"            => date("Y-m-d H:i:s"),
+            "fecha_modificacion"        => date("Y-m-d H:i:s")
+        );
+
+        $consulta = SQL::modificar("proveedores", $datos, "id_tercero = '$forma_id'");
+
         if ($consulta) {
             $error   = false;
             $mensaje = $textos["ITEM_MODIFICADO"];
@@ -269,6 +354,7 @@ if (!empty($url_generar)) {
             $mensaje = $textos["ERROR_MODIFICAR_ITEM"];
         }
     }
+
 
     /*** Enviar datos con la respuesta del proceso al script que originó la petición ***/
     $respuesta    = array();
