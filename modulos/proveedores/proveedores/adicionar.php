@@ -99,9 +99,9 @@ if (!empty($url_generar)) {
     );
 
     $tipo_persona = array(
-        "1" => $textos["NATURAL"],
-        "2" => $textos["JURIDICA"],
-        "3" => $textos["INTERNO"]
+        "1" => $textos["PERSONA_NATURAL"],
+        "2" => $textos["PERSONA_JURIDICA"],
+        "3" => $textos["CODIGO_INTERNO"]
     );
     $inicio_cobro = array(
         "1" => $textos["FECHA_FACTURA"],

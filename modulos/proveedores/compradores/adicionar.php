@@ -98,9 +98,9 @@ if (!empty($url_generar)) {
     );
 
     $tipo_persona = array(
-        "1" => $textos["NATURAL"],
-        "2" => $textos["JURIDICA"],
-        "3" => $textos["INTERNO"]
+        "1" => $textos["PERSONA_NATURAL"],
+        "2" => $textos["PERSONA_JURIDICA"],
+        "3" => $textos["CODIGO_INTERNO"]
     );
     $inicio_cobro = array(
         "1" => $textos["FECHA_FACTURA"],
@@ -142,6 +142,10 @@ if (!empty($url_generar)) {
         ),
         array(   
             HTML::listaSeleccionSimple("*genero", $textos["GENERO"], $genero, "", array("title" => $textos["AYUDA_GENERO"],"onBlur" => "validarItem(this);", "class" => "oculto"))
+        ),
+        array(
+            HTML::campoTextoCorto("*razon_social", $textos["RAZON_SOCIAL"], 30, 100, "", array("title" => $textos["AYUDA_RAZON_SOCIAL"], "onblur" => "validarItem(this)")),
+            HTML::campoTextoCorto("nombre_comercial", $textos["NOMBRE_COMERCIAL"], 30, 60, "", array("title" => $textos["AYUDA_NOMBRE_COMERCIAL"], "onblur" => "validarItem(this)"))
         ),
         array(
             HTML::campoTextoCorto("*fecha_ingreso", $textos["FECHA_INGRESO"], 10, 10, date("Y-m-d"), array("class" => "selectorFecha"), array("title" => $textos["AYUDA_FECHA_INGRESO"],"onBlur" => "validarItem(this);"))
