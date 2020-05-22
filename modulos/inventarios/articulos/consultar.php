@@ -39,6 +39,8 @@ if (!empty($url_generar)) {
         $columnas      = SQL::obtenerColumnas($vistaConsulta);
         $consulta      = SQL::seleccionar(array($vistaConsulta), $columnas, "id = '$url_id'");
         $datos         = SQL::filaEnObjeto($consulta);
+        $precio        = number_format($datos->precio);
+        $precio        = '$'.$precio;
 
         $error         = "";
         $titulo        = $componente->nombre;
@@ -59,11 +61,14 @@ if (!empty($url_generar)) {
             array(
                 HTML::mostrarDato("codigo",$textos["CODIGO"],$datos->codigo),
             ),
+            array(
+                HTML::mostrarDato("detalle",$textos["DETALLE"],$datos->detalle)
+            ),
             array(    
                 HTML::mostrarDato("referencia",$textos["REFERENCIA_PRINCIPAL"],$datos->referencia),
             ),
-            array(
-                HTML::mostrarDato("detalle",$textos["DETALLE"],$datos->detalle)
+            array(    
+                HTML::mostrarDato("precio",$textos["COSTO"],$precio),
             ),
             array(
                 HTML::mostrarDato("proveedor",$textos["PROVEEDOR"],$tercero)

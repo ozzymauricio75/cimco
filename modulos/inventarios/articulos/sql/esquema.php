@@ -193,7 +193,7 @@ $vistas = array(
             pance_articulos.codigo AS CODIGO,
             pance_articulos.detalle  AS DESCRIPCION,
             pance_articulos.referencia AS REFERENCIA,
-            pance_articulos.precio AS COSTO,
+            CONCAT('$',FORMAT(pance_articulos.precio,0)) AS COSTO,
         CONCAT(if(pance_terceros.primer_nombre is not null, pance_terceros.primer_nombre, ''),' ',
             if(pance_terceros.segundo_nombre is not null, pance_terceros.segundo_nombre, ''),' ',
             if(pance_terceros.primer_apellido is not null, pance_terceros.primer_apellido, ''),' ',

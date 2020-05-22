@@ -71,6 +71,7 @@ if (!empty($url_generar)) {
         $datos         = SQL::filaEnObjeto($consulta);
         $error         = "";
         $titulo        = $componente->nombre;
+        $precio        = number_format($datos->precio);
 
         $id_sucursal   = SQL::obtenerValor("sucursales","nombre","id='$datos->id_sucursal'");
 
@@ -116,7 +117,7 @@ if (!empty($url_generar)) {
                 HTML::listaSeleccionSimple("estado", $textos["ESTADO"], $estado, $datos->estado)
             ),
             array(
-                HTML::campoTextoCorto("*precio", $textos["COSTO"], 15, 15, $datos->precio, array("title" => $textos["AYUDA_PRECIO"],"class" => "numero", "onblur" => "validarItem(this);"))
+                HTML::campoTextoCorto("*precio", $textos["COSTO"], 15, 15, $precio, array("title" => $textos["AYUDA_PRECIO"],"class" => "numero", "onblur" => "validarItem(this);"))
             ),
             array(
                 HTML::listaSeleccionSimple("*tasa", $textos["TASA"], HTML::generarDatosLista("tasas", "id", "descripcion"), SQL::obtenerValor("articulos", "id_tasa", $condicion)),
@@ -156,8 +157,9 @@ if (!empty($url_generar)) {
 } 
 
     /*** Asumir por defecto que no hubo error ***/
-    $error   = false;
-    $mensaje = $textos["ITEM_MODIFICADO"];
+    $error        = false;
+    $mensaje      = $textos["ITEM_MODIFICADO"];
+    $forma_precio = str_replace(',','',$forma_precio);
 
     if (empty($forma_codigo)||
         empty($forma_detalle)||

@@ -2,7 +2,7 @@
 
 /**
 *
-* Copyright (C) 2009 FELINUX Ltda
+* Copyright (C) 2020 Raul Mauricio Oidor Lozano
 *
 * Este archivo es parte de:
 * PANCE :: Plataforma para la Administración del Nexo Cliente-Empresa
@@ -64,7 +64,7 @@ if (!empty($url_generar)) {
 
         /*** Definición de botones ***/
         $botones = array(
-            HTML::boton("botonAceptar", $textos["ACEPTAR"], "eliminarEvento('$url_id');", "aceptar")
+            HTML::boton("botonAceptar", $textos["ACEPTAR"], "eliminarItem('$url_id');", "aceptar")
         );
 
         $contenido = HTML::generarPestanas($formularios, $botones);
