@@ -157,3 +157,33 @@
             $('#razon_social').removeClass("campoInactivo").removeAttr("disabled");
         }
     }
+
+    function redondearCentenas(numero) {
+        var residuo = parseInt(numero % 1000);
+        var valor   = parseInt(numero - residuo);
+
+        if (residuo > 500) {
+            valor += 1000;
+        }
+        return valor;
+    }
+
+    function formatoNumero(numero) {
+        numero          = numero.toString();
+        var numeroComas = '';
+        cont            = 0;
+        for ( m=numero.length; m>=0; m--) {
+            if (cont != 3) {
+                numeroComas = numero.charAt(m-1)+numeroComas;
+                cont++;
+            } else {
+                cont = 0;
+                if (m != 0) {
+                    numeroComas = ','+numeroComas;
+                    m++;
+                }
+            }
+        }
+        return numeroComas;
+    }
+

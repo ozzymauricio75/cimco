@@ -28,7 +28,7 @@
 /*** Nombre de la vista a partir de la cual se genera la tabla ***/
 $vistaMenu     = "menu_articulos";
 $vistaBuscador = "buscador_articulos";
-$alineacion    = array("I","I","I");
+$alineacion    = array("I","D","I","D","D","I");
 
 /*** Devolver datos para autocompletar la búsqueda ***/
 if (isset($url_completar)) {
@@ -41,7 +41,7 @@ $botones  = HTML::boton("ADICARTI",$textos["ADICIONAR"],"ejecutarComando(this,70
 $botones .= HTML::boton("CONSARTI",$textos["CONSULTAR"],"ejecutarComando(this,700,600);","consultar");
 $botones .= HTML::boton("MODIARTI",$textos["MODIFICAR"],"ejecutarComando(this,700,600);","modificar");
 $botones .= HTML::boton("ELIMARTI",$textos["ELIMINAR"],"ejecutarComando(this,700,600);","eliminar");
-$botones .= HTML::boton("LISTARTI",$textos["EXPORTAR"],"ejecutarComando(this,700,600);","imprimir");
+//$botones .= HTML::boton("LISTARTI",$textos["EXPORTAR"],"ejecutarComando(this,700,600);","imprimir");
 
 /*** Obtener el número de la página actual ***/
 if (empty($url_pagina)) {

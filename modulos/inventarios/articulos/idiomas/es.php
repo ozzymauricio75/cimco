@@ -38,6 +38,9 @@ $textos = array(
     "PESTANA_FOTO"             => "Fotos",
     "PESTANA_REFERENCIAS"      => "Referencias alternas",
     "CODIGO"                   => "Código",
+    "ESTADO"                   => "Estado",
+    "INACTIVO"                 => "Inactivo",
+    "ACTIVO"                   => "Activo",
     "DETALLE"                  => "Detalle",
     "ESTRUCTURA"               => "Estructura de grupo",
     "PROVEEDOR"                => "Proveedor",
@@ -103,7 +106,8 @@ $textos = array(
     "PRECIO_VACIO"             => "Error, debe ingresar el precio del articulo",
     "TIPO_INVENTARIO_VACIO"    => "Error, debe ingresar el tipo de inventario del articulo",
     "TASA_VACIO"               => "Error, debe ingresar la tasa del articulo",
-    // MENSAJES DE AYUDA
+    "ERROR_EXISTE_CODIGO"      => "Error, existe codigo del articulo",
+    //MENSAJES DE AYUDA
     "AYUDA_FOTO"               => "Seleccione la foto principal del articulo",
     "AYUDA_CODIGO"             => "Digite el código del articulo",
     "FOTO_NUEVA"               => "Nueva foto",

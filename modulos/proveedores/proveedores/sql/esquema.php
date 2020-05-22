@@ -297,5 +297,48 @@ $registros["componentes"] = array(
      FROM pance_terceros, pance_tipos_documento_identidad
      WHERE pance_terceros.proveedor = '1';
 
+     /*** Sentencia para la creación de la vista requerida ***/
+/***
+    CREATE OR REPLACE VIEW pance_menu_proveedores AS
+    SELECT pance_proveedores.id AS id,
+    pance_terceros.documento_identidad AS DOCUMENTO_PROVEEDOR,
+    CONCAT(IF(pance_terceros.primer_nombre IS NOT NULL,pance_terceros.primer_nombre,''),' ',
+    IF(pance_terceros.segundo_nombre IS NOT NULL,pance_terceros.segundo_nombre,''),' ',
+    IF(pance_terceros.primer_apellido IS NOT NULL,pance_terceros.primer_apellido,''),' ',
+    IF(pance_terceros.segundo_apellido IS NOT NULL,pance_terceros.segundo_apellido,''),' ',
+    IF(pance_terceros.razon_social IS NOT NULL,pance_terceros.razon_social,'')) AS PROVEEDOR
+    FROM pance_proveedores, pance_terceros
+    WHERE  pance_proveedores.id_tercero = pance_terceros.id;
+
+    CREATE OR REPLACE VIEW pance_buscador_proveedores AS SELECT
+    pance_proveedores.id AS id,
+    pance_terceros.documento_identidad AS documento_identidad,
+    pance_terceros.primer_nombre AS primer_nombre,
+    pance_terceros.segundo_nombre AS segundo_nombre,
+    pance_terceros.primer_apellido AS primer_apellido,
+    pance_terceros.segundo_apellido AS segundo_apellido,
+    pance_terceros.razon_social AS razon_social,
+    pance_terceros.nombre_comercial AS nombre_comercial,
+    CONCAT(IF(pance_terceros.primer_nombre IS NOT NULL,pance_terceros.primer_nombre,''),' ',
+    IF(pance_terceros.segundo_nombre IS NOT NULL,pance_terceros.segundo_nombre,''),' ',
+    IF(pance_terceros.primer_apellido IS NOT NULL,pance_terceros.primer_apellido,''),' ',
+    IF(pance_terceros.segundo_apellido IS NOT NULL,pance_terceros.segundo_apellido,''),' ',
+    IF(pance_terceros.razon_social IS NOT NULL,pance_terceros.razon_social,'')) AS nombre_completo
+    FROM pance_proveedores, pance_terceros
+    WHERE pance_proveedores.id_tercero = pance_terceros.id;
+
+    CREATE OR REPLACE VIEW pance_seleccion_proveedores AS
+    SELECT pance_proveedores.id AS id,
+    CONCAT(
+    pance_terceros.documento_identidad, '-',
+    if(pance_terceros.primer_nombre is not null, pance_terceros.primer_nombre, ''), ' ',
+    if(pance_terceros.segundo_nombre is not null, pance_terceros.segundo_nombre, ''), ' ',
+    if(pance_terceros.primer_apellido is not null, pance_terceros.primer_apellido, ''), ' ',
+    if(pance_terceros.segundo_apellido is not null, pance_terceros.segundo_apellido, ''), ' ',
+    if(pance_terceros.razon_social is not null, pance_terceros.razon_social, ''), '|',
+    pance_proveedores.id) AS nombre
+    FROM pance_terceros, pance_proveedores
+    WHERE pance_terceros.id = pance_proveedores.id_tercero
+    ORDER BY pance_terceros.primer_nombre ASC;
 ***/
 ?>

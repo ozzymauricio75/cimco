@@ -24,11 +24,60 @@
 * <http://www.gnu.org/licenses/>.
 *
 **/
+
+/*** Devolver datos para autocompletar la búsqueda ***/
+if (isset($url_completar)) {
+    if (($url_item) == "selector3") {
+        echo SQL::datosAutoCompletar("seleccion_proveedores", $url_q);
+    }
+    exit;
+
+}
+
 $tabla = "usuarios";
 $columnas                   = SQL::obtenerColumnas($tabla);
 $consulta                   = SQL::seleccionar(array($tabla), $columnas, "usuario = '$sesion_usuario'");
 $datos                      = SQL::filaEnObjeto($consulta);
 $sesion_id_usuario_ingreso  = $datos->id;
+
+if(!empty($url_recargarPais)){
+    $id_proveedor = $url_id_proveedor;
+
+    $consulta        = SQL::obtenerValor("proveedores","id_tercero","id = '$id_proveedor'");
+    $id_tercero      = $consulta;
+    $consulta        = SQL::obtenerValor("terceros","id_municipio_documento","id = '$id_tercero'");
+    $id_ciudad       = $consulta;
+    $consulta        = SQL::obtenerValor("municipios","id_departamento","id = '$id_ciudad'");
+    $id_departamento = $consulta;
+    $consulta        = SQL::obtenerValor("departamentos","id_pais","id = '$id_departamento'");
+    $id_pais         = $consulta;
+
+    $elementos[0] = $id_pais;
+    
+    HTTP::enviarJSON($elementos);
+    exit;
+}
+
+/*** Devolver datos para recargar los elementos del formulario relacionados con el artículo seleccionado ***/
+if (isset($url_recargar)) {
+    if (!empty($url_id)) {
+        if ($url_elemento == 'proveedor') {
+            $consulta = SQL::seleccionar(array("proveedores"), array("id_tercero"), "id='$url_id'");
+            if (SQL::filasDevueltas($consulta)) {
+                $datos           = SQL::filaEnObjeto($consulta);
+                $id_tercero_proveedor = $datos->id_tercero;
+                //$contado         = $datos->id_forma_pago_contado;
+                //$credito         = $datos->id_forma_pago_credito;
+                //$iva             = $datos->forma_iva;
+                $datos_proveedor = $id_tercero_proveedor;
+            }
+            HTTP::enviarJSON($datos_proveedor);
+            exit;
+        }
+    }
+    //exit;
+}    
+
 /*** Generar el formulario para la captura de datos ***/
 if (!empty($url_generar)) {
 
@@ -43,20 +92,24 @@ if (!empty($url_generar)) {
         "2" => $textos["SUMINISTRO"]
     );
 
+    $activo= array(
+        "0" => $textos["INACTIVO"],
+        "1" => $textos["ACTIVO"]
+    );
+
     $error  = "";
     $titulo = $componente->nombre;
-}
 
-$consulta = SQL::seleccionar(array("terceros"),array("*"),"id > 0 AND proveedor='1'");
+    $consulta = SQL::seleccionar(array("terceros"),array("*"),"id > 0 AND proveedor='1'");
     if (SQL::filasDevueltas($consulta)){
 
         while ($datos = SQL::filaEnObjeto($consulta)) {
             if($datos->tipo_persona==1){
-                $nombre_proveedor
+                $nombre_proveedor;
             }    
         }
     
-        $sedes = HTML::generarDatosLista("sedes_clientes", "id", "nombre_sede","id_sucursal IN (".implode(",", $sucursales_sedes).")");
+    //$sedes = HTML::generarDatosLista("sedes_clientes", "id", "nombre_sede","id_sucursal IN (".implode(",", $sucursales_sedes).")");
         /*$datos_tercero = SQL::filaEnObjeto($consulta);
         $datos = array(                                                                                                                                                                                                                                                   
             $datos_tercero->primer_nombre,
@@ -102,11 +155,12 @@ $consulta = SQL::seleccionar(array("terceros"),array("*"),"id > 0 AND proveedor=
     /*** Definición de pestañas general ***/
     $formularios["PESTANA_GENERAL"] = array(
         array(
-            HTML::listaSeleccionSimple("*id_sucursal", $textos["SUCURSAL"],HTML::generarDatosLista("sucursales", "id", "nombre"), "", array("title" => $textos["AYUDA_SUCURSALES"],"onBlur" => "validarItem(this);"))
-            ),
+            HTML::campoTextoCorto("*selector3", $textos["PROVEEDOR"], 40, 255, "", array("title" => $textos["AYUDA_PROVEEDOR"], "class" => "autocompletable"))
+            .HTML::campoOculto("id_proveedor", "")
+        ),
         array(
-            HTML::listaSeleccionSimple("*id_proveedor", $textos["PROVEEDOR"],$nombre_proveedor, "", array("title" => $textos["AYUDA_PROVEEDOR"],"onBlur" => "validarItem(this);"))
-            ),
+            HTML::listaSeleccionSimple("*id_sucursal", $textos["SUCURSAL"],HTML::generarDatosLista("sucursales", "id", "nombre"), "", array("title" => $textos["AYUDA_SUCURSALES"],"onBlur" => "validarItem(this);"))
+        ),
         array(
             HTML::campoTextoCorto("*codigo", $textos["CODIGO"], 30, 255, "", array("title" => $textos["AYUDA_CODIGO"],"onBlur" => "validarItem(this);"))
         ),
@@ -139,6 +193,7 @@ $consulta = SQL::seleccionar(array("terceros"),array("*"),"id > 0 AND proveedor=
     $respuesta[1] = $titulo;
     $respuesta[2] = $contenido;
     HTTP::enviarJSON($respuesta);
+    exit();
 
 /*** Adicionar los datos provenientes del formulario ***/
 } elseif (!empty($forma_procesar)) {
@@ -168,12 +223,15 @@ $consulta = SQL::seleccionar(array("terceros"),array("*"),"id > 0 AND proveedor=
 
     }elseif(empty($forma_tasa)){
         $error   = true;
-        $mensaje = $textos["TASA_VACIO"];        
-
+        $mensaje = $textos["TASA_VACIO"];  
+    }elseif (empty($forma_id_proveedor)) {
+        $error   = true;
+        $mensaje = $textos["ERROR_DATOS_INCOMPLETOS"];   
     }else {
         /*** Insertar datos ***/
         $datos = array(
             "id_sucursal"         => $forma_id_sucursal,
+            "id_proveedor"        => $forma_id_proveedor,
             "codigo"              => $forma_codigo,
             "detalle"             => $forma_detalle,
             "referencia"          => $forma_referencia,

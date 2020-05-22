@@ -24,7 +24,6 @@
 * <http://www.gnu.org/licenses/>.
 *
 **/
-
 /*** Generar el formulario para la captura de datos ***/
 if (!empty($url_generar)) {
 
@@ -35,30 +34,60 @@ if (!empty($url_generar)) {
         $contenido = "";
 
     } else {
-        $vistaConsulta = "marcas";
+        $vistaConsulta = "articulos";
         $columnas      = SQL::obtenerColumnas($vistaConsulta);
         $consulta      = SQL::seleccionar(array($vistaConsulta), $columnas, "id = '$url_id'");
         $datos         = SQL::filaEnObjeto($consulta);
 
         $error         = "";
         $titulo        = $componente->nombre;
+        $id_sucursal   = SQL::obtenerValor("sucursales","nombre","id='$datos->id_sucursal'");
+        
+        $tercero       = SQL::obtenerValor("menu_terceros","NOMBRE_COMPLETO","id='$datos->id_proveedor'");
+        
+        $tipo_inventario = array(
+            "0" => $textos["MERCANCIA"],
+            "1" => $textos["MATERIA_PRIMA"],
+            "2" => $textos["SUMINISTRO"],
+            "3" => $textos["OBSEQUIO"],
+        );
 
-        $caracteristica = array(
-            "0" => $textos["PANAMA"],
-            "1" => $textos["NACIONAL"],
-            "2" => $textos["ESPECIAL"]
+        $tipo_articulo = array(
+            "1" => $textos["PRODUCTO_TERMINADO"],
+            "2" => $textos["OBSEQUIO"],
+            "3" => $textos["ACTIVO_FIJO"],
+            "4" => $textos["MATERIA_PRIMA"]
+        );
+
+        $manejo_inventario = array(
+            "1" => $textos["INVENTARIO_VALORIZADO"],
+            "2" => $textos["INVENTARIO_SOLO_KARDEX"]
+        );
+
+        $activo = array(
+            "0" => $textos["INACTIVO"],
+            "1" => $textos["ACTIVO"]
         );
 
         /*** Definición de pestañas ***/
-        $formularios["PESTANA_GENERAL"] = array(
+        $formularios["PESTANA_DATOS_GENERALES"] = array(
             array(
-                HTML::mostrarDato("descripcion", $textos["DESCRIPCION"], $datos->descripcion)
+                HTML::mostrarDato("codigo",$textos["CODIGO"],$datos->codigo),
+            ),
+            array(    
+                HTML::mostrarDato("referencia",$textos["REFERENCIA_PRINCIPAL"],$datos->referencia),
             ),
             array(
-                HTML::mostrarDato("caracteristica", $textos["CARACTERISTICA"], $caracteristica[$datos->caracteristica])
+                HTML::mostrarDato("detalle",$textos["DETALLE"],$datos->detalle)
+            ),
+            array(
+                HTML::mostrarDato("proveedor",$textos["PROVEEDOR"],$tercero)
+            ),
+            array(
+                HTML::mostrarDato("tipo_inventario",$textos["TIPO_INVENTARIO"],$tipo_inventario[$datos->tipo_inventario]),
             )
         );
-
+        
         /*** Definición de botones ***/
         $botones = array(
             HTML::boton("botonAceptar", $textos["ACEPTAR"], "eliminarItem('$url_id');", "aceptar")
@@ -76,7 +105,7 @@ if (!empty($url_generar)) {
 
 /*** Eliminar el elemento seleccionado ***/
 } elseif (!empty($forma_procesar)) {
-    $consulta = SQL::eliminar("marcas", "id = '$forma_id'");
+    $consulta = SQL::eliminar("articulos", "id = '$forma_id'");
 
     if ($consulta) {
         $error   = false;

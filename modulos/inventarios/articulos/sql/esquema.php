@@ -34,7 +34,7 @@ $tablas["articulos"] = array(
     "referencia"              => "VARCHAR(15) NOT NULL COMMENT 'Referencia principal del articulo'",
     "tipo_inventario"         => "ENUM('1','2') NOT NULL DEFAULT '1' COMMENT '1->Materia prima 2->Suministro'",
     "estado"                  => "ENUM('0','1') NOT NULL DEFAULT '1' COMMENT 'Inactivo 0->No 1->Si'",
-    "precio"                  => "DECIMAL(11,4) NOT NULL COMMENT 'Precio'",
+    "precio"                  => "DECIMAL(11,2) NOT NULL COMMENT 'Precio'",
     "id_tasa"                 => "INT(7) UNSIGNED ZEROFILL NOT NULL COMMENT 'Id de la tabla tasas'",
     "id_usuario_registra"     => "SMALLINT(4) UNSIGNED ZEROFILL NOT NULL DEFAULT '0' COMMENT 'Id del usuario que genera el registro'",
     "fecha_registra"          => "DATETIME NOT NULL COMMENT 'Fecha ingreso al sistema'",
@@ -185,5 +185,26 @@ $vistas = array(
             WHERE   pance_articulos.codigo != 0;"
     )
 );
+/*** Sentencia para la creación de la vista requerida ***/
+/***
+    CREATE OR REPLACE VIEW pance_menu_articulos AS
+        SELECT pance_articulos.id AS id,
+            pance_sucursales.nombre AS SUCURSAL,
+            pance_articulos.codigo AS CODIGO,
+            pance_articulos.detalle  AS DESCRIPCION,
+            pance_articulos.referencia AS REFERENCIA,
+            pance_articulos.precio AS COSTO,
+        CONCAT(if(pance_terceros.primer_nombre is not null, pance_terceros.primer_nombre, ''),' ',
+            if(pance_terceros.segundo_nombre is not null, pance_terceros.segundo_nombre, ''),' ',
+            if(pance_terceros.primer_apellido is not null, pance_terceros.primer_apellido, ''),' ',
+            if(pance_terceros.segundo_apellido is not null, pance_terceros.segundo_apellido, ''),' ',
+            if(pance_terceros.razon_social is not null, pance_terceros.razon_social, '')) AS PROVEEDOR
+        FROM 
+            pance_articulos,pance_terceros,pance_proveedores,pance_sucursales
+        WHERE 
+            pance_articulos.id_proveedor = pance_proveedores.id AND
+            pance_terceros.id = pance_proveedores.id AND 
+            pance_articulos.id_sucursal = pance_sucursales.id;
+*/
 ?>
 
