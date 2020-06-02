@@ -2,6 +2,111 @@
         ejecutarFuncionesGlobales();
     });
 
+    /*** Cargar datos si el tercero existe ***/
+    function cargarDatos() {
+        var documento_identidad = $('#documento_identidad').val();
+        var destino = $('#URLFormulario').val();
+
+        /*** Descargar contenido  ***/
+        $.getJSON(destino, {recargar: true, documento_identidad_carga: documento_identidad}, function(datos){
+            if (datos != ""){
+                $('#documento_identidad').val(datos[1]);
+                $('#id_tipo_documento').val(datos[2]);
+                $('#id_municipio_documento').val(datos[3]);
+                $('#tipo_persona').val(datos[4]);
+                $('#primer_nombre').val(datos[5]);
+                $('#segundo_nombre').val(datos[6]);
+                $('#primer_apellido').val(datos[7]);
+                $('#segundo_apellido').val(datos[8]);
+                $('#razon_social').val(datos[9]);
+                $('#nombre_comercial').val(datos[10]);
+                $('#id_municipio_residencia').val(datos[13]);
+                $('#direccion_principal').val(datos[14]);
+                $('#telefono_principal').val(datos[15]);
+                $('#telefono_secundario').val(datos[16]);
+                $('#celular').val(datos[17]);
+                $('#fax').val(datos[18]);
+                $('#correo').val(datos[19]);
+                $('#sitio_web').val(datos[20]);
+                $('#genero').val(datos[21]);
+                $('#activo').val(datos[22]);
+                $('#cliente').val(datos[23]);
+                $('#proveedor').val(datos[24]);
+                $('#comprador').val(datos[25]);
+
+                var tipo_persona = $('#tipo_persona').val(datos[4]);
+
+                if (datos[4] == 1){
+                    $('#persona_natural').attr("checked","true")
+                    $('#primer_nombre').parent().show();
+                    $('#primer_nombre').removeClass("campoInactivo").removeAttr("disabled");
+                    $('#segundo_nombre').parent().show();
+                    $('#segundo_nombre').removeClass("campoInactivo").removeAttr("disabled");
+                    $('#primer_apellido').parent().show();
+                    $('#primer_apellido').removeClass("campoInactivo").removeAttr("disabled");
+                    $('#segundo_apellido').parent().show();
+                    $('#segundo_apellido').removeClass("campoInactivo").removeAttr("disabled");
+                    $('#razon_social').parent().hide();
+                    $('#razon_social').addClass("campoInactivo").attr("disabled","disabled");
+                }else{
+                    if (datos[4]== 2){
+                        $('#persona_juridica').attr("checked","true")
+                    }else{
+                        $('#codigo_interno').attr("checked","true")
+                    }
+                    $('#primer_nombre').parent().hide();
+                    $('#primer_nombre').addClass("campoInactivo").attr("disabled","disabled");
+                    $('#segundo_nombre').parent().hide();
+                    $('#segundo_nombre').addClass("campoInactivo").attr("disabled","disabled");
+                    $('#primer_apellido').parent().hide();
+                    $('#primer_apellido').addClass("campoInactivo").attr("disabled","disabled");
+                    $('#segundo_apellido').parent().hide();
+                    $('#segundo_apellido').addClass("campoInactivo").attr("disabled","disabled");
+                    $('#razon_social').parent().show();
+                    $('#razon_social').removeClass("campoInactivo").removeAttr("disabled");
+                }
+
+                var id_municipio_documento = $('#id_municipio_documento').val();
+                $.getJSON(destino, {recargarMunicipioDocumento: true, municipio_documento: id_municipio_documento}, function(dato){
+                    if(dato){
+                        $('#selector1').val(dato);
+                    }
+                });
+
+                var id_municipio_residencia = $('#id_municipio_residencia').val();
+                $.getJSON(destino, {recargarMunicipioResidencia: true, municipio_residencia: id_municipio_residencia}, function(dato){
+                    if(dato){
+                        $('#selector2').val(dato);
+                        $('#selector3').val(dato);
+                        $('#id_localidad').val(datos[13]);
+                        $('#direccion_principal').val(datos[14]);
+                        $('#telefono_principal').val(datos[15]);
+                        $('#celular').val(datos[16]);
+                    }
+                });
+
+            } else{
+                $('#id_tipo_documento').val('');
+                $('#id_municipio_documento').val('');
+                $('#tipo_persona').val('');
+                $('#primer_nombre').val('');
+                $('#segundo_nombre').val('');
+                $('#primer_apellido').val('');
+                $('#segundo_apellido').val('');
+                $('#razon_social').val('');
+                $('#nombre_comercial').val('');
+                $('#fecha_nacimiento').val('');
+                $('#id_municipio_residencia').val('');
+                $('#direccion_principal').val('');
+                $('#telefono_principal').val('');
+                $('#celular').val('');
+                $('#fax').val('');
+                $('#correo').val('');
+                $('#sitio_web').val('');
+            }
+        });
+    }
+
     function cargarReferencia(){
         var valor  = $('#codigo_interno').val();
         $('#referencia').val(valor);

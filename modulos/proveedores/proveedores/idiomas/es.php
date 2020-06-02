@@ -158,7 +158,7 @@ $textos = array(
     "AYUDA_VALOR_SEGURO"            => "Digite el valor del seguro si el cliente lo cobra en la factura",
     "AYUDA_PRIMERA_CUOTA"           => "Digite el porcentaje de la primera cuota por vencimiento",
     "AYUDA_ULTIMA_CUOTA"            => "Digite el porcentaje de la ultima cuota por vencimiento",
-    "ERROR_EXISTE_TERCERO"          => "Ya existe un cliente con ese documento",
+    "ERROR_EXISTE_TERCERO"          => "Ya existe un tercero con ese documento",
     "DATO_VACIO"                    => ""
 /*
     "PESTANA_CLIENTE"               => "Información cliente",

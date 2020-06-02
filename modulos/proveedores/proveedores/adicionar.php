@@ -6,20 +6,20 @@
 * Mauricio Oidor L. <ozzymauricio75@gmail.com>
 *
 * Este archivo es parte de:
-* PANCE :: Plataforma para la AdministraciÛn del Nexo Cliente-Empresa
+* PANCE :: Plataforma para la Administraci√≥n del Nexo Cliente-Empresa
 *
 * Este programa es software libre: usted puede redistribuirlo y/o
-* modificarlo  bajo los tÈrminos de la Licencia P˙blica General GNU
-* publicada por la FundaciÛn para el Software Libre, ya sea la versiÛn 3
-* de la Licencia, o (a su elecciÛn) cualquier versiÛn posterior.
+* modificarlo  bajo los t√©rminos de la Licencia P√∫blica General GNU
+* publicada por la Fundaci√≥n para el Software Libre, ya sea la versi√≥n 3
+* de la Licencia, o (a su elecci√≥n) cualquier versi√≥n posterior.
 *
-* Este programa se distribuye con la esperanza de que sea ˙til, pero
-* SIN GARANTÕA ALGUNA; ni siquiera la garantÌa implÌcita MERCANTIL o
-* de APTITUD PARA UN PROP”SITO DETERMINADO. Consulte los detalles de
-* la Licencia P˙blica General GNU para obtener una informaciÛn m·s
+* Este programa se distribuye con la esperanza de que sea √∫til, pero
+* SIN GARANT√çA ALGUNA; ni siquiera la garant√≠a impl√≠cita MERCANTIL o
+* de APTITUD PARA UN PROP√ìSITO DETERMINADO. Consulte los detalles de
+* la Licencia P√∫blica General GNU para obtener una informaci√≥n m√°s
 * detallada.
 *
-* DeberÌa haber recibido una copia de la Licencia P˙blica General GNU
+* Deber√≠a haber recibido una copia de la Licencia P√∫blica General GNU
 * junto a este programa. En caso contrario, consulte:
 * <http://www.gnu.org/licenses/>.
 *
@@ -30,7 +30,7 @@ $consulta                   = SQL::seleccionar(array($tabla), $columnas, "usuari
 $datos                      = SQL::filaEnObjeto($consulta);
 $sesion_id_usuario_ingreso  = $datos->id;
 
-/*** Devolver datos para autocompletar la b˙squeda ***/
+/*** Devolver datos para autocompletar la b√∫squeda ***/
 if (isset($url_completar)) {
 
     if (($url_item) == "selector1") {
@@ -41,11 +41,48 @@ if (isset($url_completar)) {
     }
     exit;
 }
+
 /*** Devolver datos para cargar los elementos del formulario relacionados con el documento del cliente digitado***/
 if (isset($url_recargar)) {
-    if (!empty($url_origen)){
-        $respuesta = HTML::generarDatosLista("localidades","id","nombre","id_municipio = '$url_origen'");    
-        HTTP::enviarJSON($respuesta);
+
+    if (!empty($url_documento_identidad_carga)) {
+
+        $consulta = SQL::seleccionar(array("terceros"), array("*"), "documento_identidad = '$url_documento_identidad_carga'", "", "documento_identidad", 1);
+        $tabla = array();
+
+        if (SQL::filasDevueltas($consulta)) {
+            $datos = SQL::filaEnObjeto($consulta);
+            $tabla = array(
+                //$datos->documento_identidad,
+                $datos->id_tipo_documento,
+                $datos->id_municipio_documento,
+                $datos->tipo_persona,
+                $datos->primer_nombre,
+                $datos->segundo_nombre,
+                $datos->primer_apellido,
+                $datos->segundo_apellido,
+                $datos->razon_social,
+                $datos->nombre_comercial,
+                $datos->fecha_nacimiento,
+                $datos->fecha_ingreso,  
+                $datos->id_municipio_residencia,
+                $datos->direccion_principal,
+                $datos->telefono_principal,
+                $datos->telefono_secundario,
+                $datos->celular,
+                $datos->fax,
+                $datos->correo,
+                $datos->sitio_web,
+                $datos->activo,
+                $datos->genero,
+                $datos->cliente,
+                $datos->proveedor,
+                $datos->comprador,
+            );
+        } else {
+            $tabla[] = "";
+        }
+        HTTP::enviarJSON($tabla);
     }
     exit;
 }
@@ -115,15 +152,18 @@ if (!empty($url_generar)) {
     );
     
     $barrios_localidades = HTML::generarDatosLista("localidades", "id", "nombre");
-    $id_tipo_documento   = SQL::obtenerValor("tipos_documento_identidad", "id", "descripcion='NIT' or descripcion='Nit'");
+    $id_tipo_documento   = SQL::obtenerValor("tipos_documento_identidad", "id", "");
 
-    /*** DefiniciÛn de pestaÒas para datos del tercero***/
+    /*** Definici√≥n de pesta√±as para datos del tercero***/
     $formularios["PESTANA_PROVEEDOR"] = array(
         array(
             HTML::campoTextoCorto("*documento_identidad", $textos["DOCUMENTO_PROVEEDOR"], 15, 15, "",array("title" => $textos["AYUDA_DOCUMENTO_PROVEEDOR"],"onblur" => "validarItem(this);","onchange" => "cargarDatos()"))
         ),
         array(
             HTML::listaSeleccionSimple("*id_tipo_documento", $textos["TIPO_DOCUMENTO_IDENTIDAD"], HTML::generarDatosLista("tipos_documento_identidad", "id", "descripcion"), $id_tipo_documento)
+        ),
+       array(
+            HTML::campoTextoCorto("*selector1", $textos["MUNICIPIO"], 40, 255, "", array("title" => $textos["AYUDA_DOCUMENTO_MUNICIPIO"], "class" => "autocompletable")).HTML::campoOculto("id_municipio_documento", "")
         ),
         array(
             HTML::marcaSeleccion("tipo_persona", $textos["PERSONA_NATURAL"], 1, false, array("id" => "persona_natural", "onChange" => "activarNombres(1)")),
@@ -138,7 +178,7 @@ if (!empty($url_generar)) {
             HTML::campoTextoCorto("*primer_apellido", $textos["PRIMER_APELLIDO"], 15, 15, "", array("title" => $textos["AYUDA_PRIMER_APELLIDO"], "onblur" => "validarItem(this)", "class" => "oculto")),
             HTML::campoTextoCorto("segundo_apellido", $textos["SEGUNDO_APELLIDO"], 15, 15, "", array("title" => $textos["AYUDA_SEGUNDO_APELLIDO"], "onblur" => "validarItem(this)", "class" => "oculto"))
         ),
-        array(   
+                array(   
             HTML::listaSeleccionSimple("*genero", $textos["GENERO"], $genero, "", array("title" => $textos["AYUDA_GENERO"],"onBlur" => "validarItem(this);", "class" => "oculto"))
         ),
         array(
@@ -146,11 +186,36 @@ if (!empty($url_generar)) {
             HTML::campoTextoCorto("nombre_comercial", $textos["NOMBRE_COMERCIAL"], 30, 60, "", array("title" => $textos["AYUDA_NOMBRE_COMERCIAL"], "onblur" => "validarItem(this)"))
         ),
         array(
-            HTML::campoTextoCorto("*fecha_ingreso", $textos["FECHA_INGRESO"], 10, 10, date("Y-m-d"), array("class" => "selectorFecha"), array("title" => $textos["AYUDA_FECHA_INGRESO"],"onBlur" => "validarItem(this);"))
-        )
+                HTML::listaSeleccionSimple("*id_municipio_residencia", $textos["AYUDA_DOCUMENTO_MUNICIPIO"], $barrios_localidades, $datos->id_municipio_residencia, array("title" => $textos["AYUDA_DEPARTAMENTO"], "onChange" => "recargarLista('departamento','municipio');"))
+        ),
     );
 
-     /*** DefiniciÛn de pestaÒa tributaria ***/
+    /*** Definici√≥n de pesta√±as para la ubicaci√≥n del tercero***/
+    $formularios["PESTANA_UBICACION_PROVEEDOR"] = array(
+        array(
+            HTML::campoTextoCorto("*direccion_principal", $textos["DIRECCION"], 50, 50, "", array("title" => $textos["AYUDA_DIRECCION"]))
+        ),
+        array(
+            HTML::campoTextoCorto("*telefono_principal", $textos["TELEFONO_PRINCIPAL"], 15, 15, "", array("title" => $textos["AYUDA_TELEFONO_PRINCIPAL"])),
+            HTML::campoTextoCorto("telefono_secundario", $textos["TELEFONO_SECUNDARIO"], 15, 15, "", array("title" => $textos["AYUDA_TELEFONO_SECUNDARIO"])),
+            HTML::campoTextoCorto("fax", $textos["FAX"], 15, 15, "", array("title" => $textos["AYUDA_FAX"])),
+            HTML::campoTextoCorto("celular", $textos["CELULAR"], 20, 20, "", array("title" => $textos["AYUDA_CELULAR"]))
+        ),
+        array(
+            HTML::campoTextoCorto("correo", $textos["CORREO"], 50, 255, "", array("title" => $textos["AYUDA_CORREO"]))
+        ),
+        array(
+            HTML::campoTextoCorto("sitio_web", $textos["SITIO_WEB"], 50, 50, "", array("title" => $textos["AYUDA_SITIO_WEB"]))
+        ),
+        array(
+            HTML::listaSeleccionSimple("*id_actividad_principal", $textos["ACTIVIDAD_PRINCIPAL"], HTML::generarDatosLista("actividades_economicas", "id", "descripcion"), "", array("title" => $textos["AYUDA_ACTIVIDAD_PRINCIPAL"],"onBlur" => "validarItem(this);"))
+        ),
+        array(
+            HTML::listaSeleccionSimple("*id_actividad_secundaria", $textos["ACTIVIDAD_SECUNDARIA"], HTML::generarDatosLista("actividades_economicas", "id", "descripcion"), "", array("title" => $textos["AYUDA_ACTIVIDAD_SECUNDARIA"],"onBlur" => "validarItem(this);"))
+        ),        
+    );
+
+    /*** Definici√≥n de pesta√±a tributaria ***/
     $formularios["PESTANA_TRIBUTARIA"] = array(
         array(
             HTML::listaSeleccionSimple("regimen", $textos["REGIMEN"], $regimen)
@@ -172,38 +237,7 @@ if (!empty($url_generar)) {
         ),
     );
 
-    /*** DefiniciÛn de pestaÒas para la ubicaciÛn del tercero***/
-    $formularios["PESTANA_UBICACION_PROVEEDOR"] = array(
-        array(
-            HTML::listaSeleccionSimple("*id_actividad_principal", $textos["ACTIVIDAD_PRINCIPAL"], HTML::generarDatosLista("actividades_economicas", "id", "descripcion"), "", array("title" => $textos["AYUDA_ACTIVIDAD_PRINCIPAL"],"onBlur" => "validarItem(this);"))
-        ),
-        array(
-            HTML::listaSeleccionSimple("*id_actividad_secundaria", $textos["ACTIVIDAD_SECUNDARIA"], HTML::generarDatosLista("actividades_economicas", "id", "descripcion"), "", array("title" => $textos["AYUDA_ACTIVIDAD_SECUNDARIA"],"onBlur" => "validarItem(this);"))
-        ),      
-        array(
-            HTML::campoTextoCorto("*selector1", $textos["MUNICIPIO"], 40, 255, "", array("title" => $textos["AYUDA_DOCUMENTO_MUNICIPIO"], "class" => "autocompletable", "onblur" => "recargarLista('id_municipio_documento','id_municipio_residencia');")).HTML::campoOculto("id_municipio_documento", "")
-        ),
-        array(
-            HTML::listaSeleccionSimple("*id_municipio_residencia", $textos["AYUDA_DOCUMENTO_MUNICIPIO"], $barrios_localidades, "", array("title" => $textos["AYUDA_DEPARTAMENTO"], "onChange" => "recargarLista('departamento','municipio');"))
-        ),
-        array(
-            HTML::campoTextoCorto("*direccion_principal", $textos["DIRECCION"], 50, 50, "", array("title" => $textos["AYUDA_DIRECCION"]))
-        ),
-        array(
-            HTML::campoTextoCorto("*telefono_principal", $textos["TELEFONO_PRINCIPAL"], 15, 15, "", array("title" => $textos["AYUDA_TELEFONO_PRINCIPAL"])),
-            HTML::campoTextoCorto("telefono_secundario", $textos["TELEFONO_SECUNDARIO"], 15, 15, "", array("title" => $textos["AYUDA_TELEFONO_SECUNDARIO"])),
-            HTML::campoTextoCorto("fax", $textos["FAX"], 15, 15, "", array("title" => $textos["AYUDA_FAX"])),
-            HTML::campoTextoCorto("celular", $textos["CELULAR"], 20, 20, "", array("title" => $textos["AYUDA_CELULAR"]))
-        ),
-        array(
-            HTML::campoTextoCorto("correo", $textos["CORREO"], 50, 255, "", array("title" => $textos["AYUDA_CORREO"]))
-        ),
-        array(
-            HTML::campoTextoCorto("sitio_web", $textos["SITIO_WEB"], 50, 50, "", array("title" => $textos["AYUDA_SITIO_WEB"]))
-        )
-    );
-
-    /*** DefiniciÛn de pestaÒa PAGOS ***/
+    /*** Definici√≥n de pesta√±a PAGOS ***/
     $formularios["PESTANA_PAGOS"] = array(
         array(
             HTML::listaSeleccionSimple("id_forma_pago_contado", $textos["FORMA_PAGO_CONTADO"], HTML::generarDatosLista("plazos_pago_proveedores", "id", "nombre"))
@@ -213,14 +247,14 @@ if (!empty($url_generar)) {
         ),
     );
 
-    /*** DefiniciÛn de botones ***/
+    /*** Definici√≥n de botones ***/
     $botones = array(
         HTML::boton("botonAceptar", $textos["ACEPTAR"], "adicionarItem();", "aceptar"),
     );
 
     $contenido = HTML::generarPestanas($formularios, $botones);
 
-    /*** Enviar datos para la generaciÛn del formulario al script que originÛ la peticiÛn ***/
+    /*** Enviar datos para la generaci√≥n del formulario al script que origin√≥ la petici√≥n ***/
     $respuesta[0] = $error;
     $respuesta[1] = $titulo;
     $respuesta[2] = $contenido;
@@ -235,7 +269,8 @@ if (!empty($url_generar)) {
         $existe_tercero = SQL::existeItem("terceros", "documento_identidad", $url_valor);
         if ($existe_tercero) {
             $id_tercero = SQL::obtenerValor("terceros", "id", "documento_identidad = '$url_valor'");
-            $existe_proveedor = SQL::existeItem("proveedores", "id", $id_tercero);
+            $idAsignado = $id_tercero;
+            $existe_proveedor = SQL::existeItem("proveedores", "id_tercero", $id_tercero);
             if ($existe_proveedor) {
                 echo json_encode($textos["ERROR_EXISTE_TERCERO"]);
             }
@@ -254,7 +289,6 @@ if (!empty($url_generar)) {
         empty($forma_id_municipio_residencia) ||
         empty($forma_direccion_principal) ||
         empty($forma_id_tipo_documento) ||
-        empty($forma_fecha_ingreso) ||
         (
          empty($forma_primer_nombre) &&
          empty($forma_primer_apellido) &&
@@ -262,11 +296,12 @@ if (!empty($url_generar)) {
         ) ||
         (
          empty($forma_primer_nombre) &&
-         !empty($forma_primer_apellido)) ||
-         (
-          !empty($forma_primer_nombre) &&
-          empty($forma_primer_apellido)
-         )
+         !empty($forma_primer_apellido)
+        ) ||
+        (
+         !empty($forma_primer_nombre) &&
+         empty($forma_primer_apellido)
+        )
         )
         {
         $error   = true;
@@ -276,7 +311,7 @@ if (!empty($url_generar)) {
 
         $existe_tercero = SQL::existeItem("terceros", "documento_identidad", $forma_documento_identidad);
         if ($existe_tercero) {
-            $id_tercero = SQL::obtenerValor("terceros", "id", "documento_identidad = '$forma_documento_identidad'");
+            $idAsignado = SQL::obtenerValor("terceros", "id", "documento_identidad = '$forma_documento_identidad'");
         }
 
         if ($forma_tipo_persona == 1){
@@ -298,7 +333,7 @@ if (!empty($url_generar)) {
             "segundo_apellido"        => $forma_segundo_apellido,
             "razon_social"            => $forma_razon_social,
             "nombre_comercial"        => $forma_nombre_comercial,
-            "fecha_ingreso"           => $forma_fecha_ingreso,
+            "fecha_ingreso"           => date("Y-m-d H:i:s"),
             "id_municipio_documento"  => $forma_id_municipio_documento,
             "id_municipio_residencia" => $forma_id_municipio_residencia,
             "direccion_principal"     => $forma_direccion_principal,
@@ -308,12 +343,13 @@ if (!empty($url_generar)) {
             "celular"                 => $forma_celular,
             "correo"                  => $forma_correo,
             "sitio_web"               => $forma_sitio_web,
-            "proveedor"               => '1'
+            "proveedor"               => '1',
+            "genero"                  => $forma_genero
         );
 
         if (!$existe_tercero) {
             $insertar = SQL::insertar("terceros", $datos);
-            /*** Error de inserciÛn ***/
+            /*** Error de inserciÔøΩn ***/
             if (!$insertar) {
                 $error   = true;
                 $mensaje = $textos["ERROR_ADICIONAR_ITEM"];
@@ -321,7 +357,7 @@ if (!empty($url_generar)) {
             $idAsignado = SQL::$ultimoId;
         }else{
             $modificar = SQL::modificar("terceros", $datos, "id = '$idAsignado'");
-            if ($modificar) {
+            if (!$modificar) {
                 $error   = false;
                 $mensaje = $textos["ITEM_MODIFICADO"];
             } else {
@@ -378,14 +414,14 @@ if (!empty($url_generar)) {
            
         $insertar = SQL::insertar("proveedores", $datos_proveedor);
 
-        /*** Error de inserciÛn ***/
+        /*** Error de inserci√≥n ***/
         if (!$insertar) {
             $error   = true;
             $mensaje = $textos["ERROR_ADICIONAR_ITEM"];
         }
     }
 
-    /*** Enviar datos con la respuesta del proceso al script que originÔøΩ la peticiÔøΩn ***/
+    /*** Enviar datos con la respuesta del proceso al script que origin√Ø¬ø¬Ω la petici√Ø¬ø¬Ωn ***/
     $respuesta    = array();
     $respuesta[0] = $error;
     $respuesta[1] = $mensaje;
